@@ -42,7 +42,7 @@ export default function Properties() {
   const [type, setType] = useState<any>(searchParams.get("type") || "all");
   const [city, setCity] = useState(searchParams.get("city") || "all");
   const [category, setCategory] = useState<any>("all");
-  const [priceRange, setPriceRange] = useState([0, 10000000]);
+  const [priceRange, setPriceRange] = useState([0, 50000000]);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const activeCities =
@@ -70,7 +70,7 @@ export default function Properties() {
     setType("all");
     setCity("all");
     setCategory("all");
-    setPriceRange([0, 10000000]);
+    setPriceRange([0, 50000000]);
   };
 
   const CountryTabs = () => (
@@ -149,8 +149,8 @@ export default function Properties() {
         <label className="text-sm font-semibold">{t("Price Range", "نطاق السعر")}</label>
         <Slider
           min={0}
-          max={10000000}
-          step={50000}
+          max={50000000}
+          step={250000}
           value={priceRange}
           onValueChange={setPriceRange}
           className="mt-6"
