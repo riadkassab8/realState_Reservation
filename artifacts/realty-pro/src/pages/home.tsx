@@ -12,15 +12,26 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useLocation } from "wouter";
 
 const CITY_IMAGES: Record<string, string> = {
+  // Saudi Arabia
   "Riyadh":     "https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=700&q=80",
   "Jeddah":     "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=700&q=80",
+  "Khobar":     "https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80",
+  "Dhahran":    "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=700&q=80",
+  "Dammam":     "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80",
+  "Mecca":      "https://images.unsplash.com/photo-1564507593729-f6e2e32c1e27?w=700&q=80",
+  "Medina":     "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700&q=80",
+  "NEOM":       "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=700&q=80",
+  // Egypt
+  "Cairo":      "https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=700&q=80",
+  "Giza":       "https://images.unsplash.com/photo-1539768942893-daf53e448371?w=700&q=80",
+  "Alexandria": "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=700&q=80",
+  "Hurghada":   "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=700&q=80",
+  // Gulf
   "Dubai":      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700&q=80",
   "Abu Dhabi":  "https://images.unsplash.com/photo-1529293624168-61236f4c8174?w=700&q=80",
-  "Doha":       "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700&q=80",
+  "Doha":       "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=700&q=80",
   "Muscat":     "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=700&q=80",
   "Manama":     "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=700&q=80",
-  "Khobar":     "https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80",
-  "Dhahran":    "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=80",
   "Kuwait City":"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=700&q=80",
   "Amman":      "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=700&q=80",
   "default":    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80",
@@ -61,13 +72,22 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl space-y-6"
           >
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/25 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest">
+                🇸🇦 {t("Saudi Arabia", "المملكة العربية السعودية")}
+              </span>
+              <span className="text-white/40 text-xs">·</span>
+              <span className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/25 text-white text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-widest">
+                🇪🇬 {t("Egypt", "مصر")}
+              </span>
+            </div>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white drop-shadow-lg leading-tight">
               {t("Find Your Dream Home", "اكتشف منزل أحلامك")}
             </h1>
             <p className="text-lg md:text-xl text-white/90 drop-shadow-md max-w-2xl mx-auto font-medium">
               {t(
-                "Discover the finest properties in the region with our exclusive collection of luxury real estate.",
-                "اكتشف أرقى العقارات في المنطقة مع مجموعتنا الحصرية من العقارات الفاخرة."
+                "The Arab world's premier real estate platform — operating across Saudi Arabia and Egypt.",
+                "المنصة العقارية الأولى في العالم العربي — تعمل في المملكة العربية السعودية ومصر."
               )}
             </p>
 
@@ -217,7 +237,7 @@ export default function Home() {
         <div className="container px-4">
           <div className="text-center mb-4">
             <span className="text-xs font-bold text-primary uppercase tracking-[0.25em]">
-              {t("Across the Region", "في أرجاء المنطقة")}
+              {t("Saudi Arabia & Egypt", "المملكة العربية السعودية ومصر")}
             </span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
@@ -225,8 +245,8 @@ export default function Home() {
           </h2>
           <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">
             {t(
-              "From Gulf capitals to rising cities — discover properties in the markets that matter.",
-              "من عواصم الخليج إلى المدن الصاعدة — اكتشف عقارات في الأسواق التي تهمك."
+              "From Riyadh to Cairo, from Jeddah to Alexandria — we cover every city that matters in Saudi Arabia and Egypt.",
+              "من الرياض إلى القاهرة، ومن جدة إلى الإسكندرية — نغطي كل مدينة مهمة في المملكة العربية السعودية ومصر."
             )}
           </p>
 

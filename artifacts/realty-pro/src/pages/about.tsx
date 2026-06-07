@@ -107,46 +107,46 @@ function Stat({
 const chapters = [
   {
     number: "01",
-    titleEn: "A Market That Deserved Better",
-    titleAr: "سوق يستحق ما هو أفضل",
+    titleEn: "Two Countries. One Standard.",
+    titleAr: "بلدان. معيار واحد.",
     bodyEn:
-      "The Arab world holds some of the most extraordinary real estate on the planet — palaces on the Palm, penthouses over the Corniche, villas carved into the hillsides of Riyadh. Yet the platforms used to discover them were cluttered, outdated, and felt nothing like the properties they listed. We decided that had to change.",
+      "Saudi Arabia and Egypt are two of the Arab world's most dynamic real estate markets — each vast, each distinct, each with enormous potential. Riyadh is rewriting skylines. Cairo is building a new capital. Jeddah is reinventing its waterfront. Alexandria is reclaiming the Mediterranean. We built Realty Pro to be the platform both markets deserve.",
     bodyAr:
-      "يضم العالم العربي بعضًا من أروع العقارات على وجه الأرض — قصور في النخلة، وبنتهاوسات فوق الكورنيش، وفيلات محفورة في تلال الرياض. ومع ذلك، كانت المنصات المستخدمة لاكتشافها مزدحمة وقديمة ولا تعكس روح العقارات التي تعرضها. قررنا أن يتغير ذلك.",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&q=80",
+      "المملكة العربية السعودية ومصر من أكثر أسواق العقارات ديناميكيةً في العالم العربي — كل منهما واسعة ومميزة وذات إمكانات هائلة. الرياض تُعيد رسم أفقها. القاهرة تبني عاصمة جديدة. جدة تُجدد واجهتها البحرية. الإسكندرية تستعيد مكانتها المتوسطية. بنينا Realty Pro لتكون المنصة التي يستحقها كلا السوقين.",
+    image: "https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=900&q=80",
     reverse: false,
   },
   {
     number: "02",
-    titleEn: "Built on Trust, Not Traffic",
-    titleAr: "مبني على الثقة لا على الزيارات",
+    titleEn: "Saudi Arabia — Where Vision Meets Skyline",
+    titleAr: "المملكة العربية السعودية — حيث تلتقي الرؤية بالأفق",
     bodyEn:
-      "Most platforms chase volume. We chase integrity. Every listing on Realty Pro passes through a multi-step verification process — documentation checks, agent credentialing, and pricing audits. When you see a property here, you are seeing the truth.",
+      "From the towers of King Abdullah Financial District in Riyadh to the shores of Jeddah's Corniche, from the holy cities of Mecca and Medina to the futuristic ambition of NEOM — Saudi Arabia is building the future faster than anywhere on earth. We are the platform for those who want to be part of it.",
     bodyAr:
-      "معظم المنصات تتسابق على الحجم. أما نحن فنتسابق على النزاهة. يمر كل عقار في Realty Pro عبر عملية تحقق متعددة المراحل — فحص الوثائق، واعتماد الوكلاء، ومراجعة الأسعار. حين ترى عقارًا هنا، فأنت ترى الحقيقة.",
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&q=80",
+      "من أبراج مركز الملك عبدالله المالي في الرياض إلى شواطئ كورنيش جدة، ومن مكة المكرمة والمدينة المنورة إلى الطموح المستقبلي لنيوم — المملكة العربية السعودية تبني المستقبل بوتيرة لا مثيل لها في أي مكان على الأرض. نحن المنصة لمن يريد أن يكون جزءًا من ذلك.",
+    image: "https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=900&q=80",
     reverse: true,
   },
   {
     number: "03",
-    titleEn: "Design as a First Principle",
-    titleAr: "التصميم كمبدأ أساسي",
+    titleEn: "Egypt — Ancient Land, Modern Ambition",
+    titleAr: "مصر — أرض الحضارة وطموح الحداثة",
     bodyEn:
-      "Luxury buyers make emotional decisions first and rational ones second. That is why we invested obsessively in design — not as decoration, but as a communication tool. A property presented beautifully sells faster and closer to asking price. We built a platform that earns the trust of what it lists.",
+      "Egypt is experiencing a real estate renaissance. The New Administrative Capital is one of the largest urban development projects in history. Sheikh Zayed and New Cairo are becoming the addresses of choice for Cairo's elite. Alexandria's waterfront is coveted across the Mediterranean. And Hurghada's Red Sea coast draws international buyers year-round. Realty Pro brings them all under one roof.",
     bodyAr:
-      "يتخذ مشترو العقارات الفاخرة قراراتهم العاطفية أولاً ثم العقلانية. لهذا استثمرنا بشكل مكثف في التصميم — ليس كزينة، بل كأداة تواصل. العقار المقدَّم بشكل جميل يُباع بشكل أسرع وبسعر أقرب إلى السعر المطلوب. بنينا منصة تستحق ثقة ما تعرضه.",
-    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&q=80",
+      "تشهد مصر نهضةً عقاريةً حقيقية. العاصمة الإدارية الجديدة هي أحد أكبر مشاريع التطوير الحضري في التاريخ. يتحول الشيخ زايد والتجمع الخامس إلى عناوين النخبة القاهرية. وتُستحسَن واجهة الإسكندرية البحرية على مستوى المتوسط. وتستقطب شواطئ البحر الأحمر في الغردقة المشترين الدوليين طوال العام. Realty Pro تجمعهم جميعًا تحت سقف واحد.",
+    image: "https://images.unsplash.com/photo-1539768942893-daf53e448371?w=900&q=80",
     reverse: false,
   },
   {
     number: "04",
-    titleEn: "From Riyadh to Dubai, One Platform",
-    titleAr: "من الرياض إلى دبي، منصة واحدة",
+    titleEn: "Built on Trust, Not Traffic",
+    titleAr: "مبني على الثقة لا على الزيارات",
     bodyEn:
-      "Real estate in the Gulf is not one market — it is many, each with its own rhythms, regulations, and cultures. Realty Pro was built from day one to work across borders: bilingual interfaces, multi-currency listings, and agents credentialed in each market. One platform, every city that matters.",
+      "Most platforms chase volume. We chase integrity. Every listing on Realty Pro passes through a multi-step verification — documentation checks, agent credentialing, and pricing audits. Whether the property is in Zamalek or Al Olaya, what you see here is the truth.",
     bodyAr:
-      "العقارات في الخليج ليست سوقًا واحدة — بل هي أسواق متعددة، لكل منها إيقاعها ولوائحها وثقافتها. بُنيت Realty Pro منذ اليوم الأول لتعمل عبر الحدود: واجهات ثنائية اللغة، وقوائم متعددة العملات، ووكلاء معتمدون في كل سوق. منصة واحدة، كل مدينة مهمة.",
-    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=900&q=80",
+      "معظم المنصات تتسابق على الحجم. أما نحن فنتسابق على النزاهة. يمر كل عقار في Realty Pro عبر تحقق متعدد المراحل — فحص الوثائق، واعتماد الوكلاء، ومراجعة الأسعار. سواء كان العقار في الزمالك أو العليا، ما تراه هنا هو الحقيقة.",
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&q=80",
     reverse: true,
   },
   {
@@ -154,9 +154,9 @@ const chapters = [
     titleEn: "The Story Is Still Being Written",
     titleAr: "القصة لا تزال تُكتب",
     bodyEn:
-      "We launched with a curated portfolio and a clear mission. What comes next is written together — with the agents who list with us, the buyers who trust us, and the cities that grow with us. Realty Pro is not finished. It is just getting started.",
+      "We launched covering Saudi Arabia and Egypt with a curated portfolio and a clear mission. Tomorrow brings new cities, new markets, and new buyers. What comes next is written together — with the agents who list with us, the buyers who trust us, and the cities that grow with us.",
     bodyAr:
-      "أطلقنا المنصة بمحفظة منتقاة ومهمة واضحة. ما يأتي بعد ذلك يُكتب معًا — مع الوكلاء الذين يدرجون عقاراتهم معنا، والمشترين الذين يثقون بنا، والمدن التي تنمو معنا. Realty Pro لم تنته بعد. إنها بدأت للتو.",
+      "أطلقنا المنصة لتغطية المملكة العربية السعودية ومصر بمحفظة منتقاة ومهمة واضحة. الغد يحمل مدنًا جديدة وأسواقًا جديدة ومشترين جددًا. ما يأتي بعد ذلك يُكتب معًا — مع الوكلاء الذين يدرجون عقاراتهم معنا، والمشترين الذين يثقون بنا، والمدن التي تنمو معنا.",
     image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=900&q=80",
     reverse: false,
   },
@@ -199,6 +199,21 @@ export default function About() {
             {t("Realty Pro", "ريالتي برو")}
           </motion.h1>
 
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={heroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+            className="flex items-center justify-center gap-3"
+          >
+            <span className="inline-flex items-center gap-2 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground/80 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest">
+              🇸🇦 {t("Saudi Arabia", "المملكة العربية السعودية")}
+            </span>
+            <span className="text-primary-foreground/30 font-light text-xl">+</span>
+            <span className="inline-flex items-center gap-2 bg-primary-foreground/10 border border-primary-foreground/20 text-primary-foreground/80 text-xs font-bold px-4 py-2 rounded-full uppercase tracking-widest">
+              🇪🇬 {t("Egypt", "مصر")}
+            </span>
+          </motion.div>
+
           <motion.p
             initial={{ opacity: 0, y: 24 }}
             animate={heroInView ? { opacity: 1, y: 0 } : {}}
@@ -206,8 +221,8 @@ export default function About() {
             className="text-lg md:text-2xl text-primary-foreground/75 leading-relaxed max-w-2xl mx-auto"
           >
             {t(
-              "How a dissatisfaction with mediocrity became the Arab world's finest property platform.",
-              "كيف تحوّل استياء من الرداءة إلى أرقى منصة عقارية في العالم العربي."
+              "The story of how two great real estate markets found the platform they always deserved.",
+              "قصة كيف وجد سوقان عقاريان عظيمان المنصة التي طالما استحقاها."
             )}
           </motion.p>
 
