@@ -1,5 +1,6 @@
 import { Property } from "@workspace/api-client-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { formatPrice } from "@/lib/format-price";
 import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -36,14 +37,6 @@ export function PropertyCard({ property }: PropertyCardProps) {
         { onSuccess: () => queryClient.invalidateQueries({ queryKey: getListFavoritesQueryKey() }) }
       );
     }
-  };
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat(language === "ar" ? "ar-AE" : "en-US", {
-      style: "currency",
-      currency: language === "ar" ? "AED" : "USD",
-      maximumFractionDigits: 0,
-    }).format(price);
   };
 
   return (
@@ -86,7 +79,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
 
             <div className="absolute bottom-4 left-4 right-4 text-white">
               <div className="text-2xl font-bold tracking-tight drop-shadow-md">
-                {formatPrice(property.price)}
+                {formatPrice(property.price, property.priceUnit, language)}
                 {property.type === "rent" && <span className="text-sm font-normal text-white/80"> / {t("month", "شهر")}</span>}
               </div>
             </div>

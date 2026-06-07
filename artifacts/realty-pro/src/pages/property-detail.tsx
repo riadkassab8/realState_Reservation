@@ -1,4 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
+import { formatPrice as formatPriceFn } from "@/lib/format-price";
 import { useGetProperty, useListFavorites, useAddFavorite, useRemoveFavorite, getListFavoritesQueryKey } from "@workspace/api-client-react";
 import { useParams } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -65,13 +66,8 @@ export default function PropertyDetail() {
   const desc = language === "ar" ? property.descriptionAr : property.description;
   const address = language === "ar" ? property.addressAr : property.address;
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat(language === "ar" ? "ar-AE" : "en-US", {
-      style: "currency",
-      currency: language === "ar" ? "AED" : "USD",
-      maximumFractionDigits: 0,
-    }).format(price);
-  };
+  const formatPrice = (price: number) =>
+    formatPriceFn(price, property.priceUnit, language);
 
   return (
     <div className="container px-4 py-8 mx-auto">
