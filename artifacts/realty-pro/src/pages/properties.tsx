@@ -134,7 +134,7 @@ export default function Properties() {
           <SelectTrigger>
             <SelectValue placeholder={t("Select City", "اختر المدينة")} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="max-h-52 overflow-y-auto">
             <SelectItem value="all">{t("All Cities", "كل المدن")}</SelectItem>
             {activeCities.map((c) => (
               <SelectItem key={c.en} value={c.en}>
