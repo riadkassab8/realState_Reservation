@@ -39,6 +39,7 @@ export interface Property {
   price: number;
   priceUnit?: string;
   area: number;
+  country?: string;
   city: string;
   cityAr: string;
   address: string;
@@ -103,6 +104,7 @@ export interface PropertyInput {
   price: number;
   priceUnit?: string;
   area: number;
+  country?: string;
   city: string;
   cityAr: string;
   address: string;
@@ -158,6 +160,7 @@ export interface CityStats {
 export type ListPropertiesParams = {
 type?: ListPropertiesType;
 category?: ListPropertiesCategory;
+country?: ListPropertiesCountry;
 city?: string;
 minPrice?: number;
 maxPrice?: number;
@@ -191,6 +194,14 @@ export const ListPropertiesCategory = {
   land: 'land',
   commercial: 'commercial',
   all: 'all',
+} as const;
+
+export type ListPropertiesCountry = typeof ListPropertiesCountry[keyof typeof ListPropertiesCountry];
+
+
+export const ListPropertiesCountry = {
+  Saudi_Arabia: 'Saudi Arabia',
+  Egypt: 'Egypt',
 } as const;
 
 export type ListPropertiesSortBy = typeof ListPropertiesSortBy[keyof typeof ListPropertiesSortBy];

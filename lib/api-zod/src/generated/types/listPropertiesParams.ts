@@ -6,12 +6,14 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ListPropertiesCategory } from './listPropertiesCategory';
+import type { ListPropertiesCountry } from './listPropertiesCountry';
 import type { ListPropertiesSortBy } from './listPropertiesSortBy';
 import type { ListPropertiesType } from './listPropertiesType';
 
 export type ListPropertiesParams = {
 type?: ListPropertiesType;
 category?: ListPropertiesCategory;
+country?: ListPropertiesCountry;
 city?: string;
 minPrice?: number;
 maxPrice?: number;

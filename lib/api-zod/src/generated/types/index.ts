@@ -10,6 +10,7 @@ export * from './cityStats';
 export * from './favoriteInput';
 export * from './healthStatus';
 export * from './listPropertiesCategory';
+export * from './listPropertiesCountry';
 export * from './listPropertiesParams';
 export * from './listPropertiesSortBy';
 export * from './listPropertiesType';

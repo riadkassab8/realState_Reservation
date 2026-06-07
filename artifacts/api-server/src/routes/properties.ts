@@ -24,6 +24,7 @@ router.get("/properties", async (req, res) => {
     const {
       type,
       category,
+      country,
       city,
       minPrice,
       maxPrice,
@@ -45,6 +46,9 @@ router.get("/properties", async (req, res) => {
     }
     if (category && category !== "all") {
       conditions.push(eq(propertiesTable.category, category));
+    }
+    if (country) {
+      conditions.push(eq(propertiesTable.country, country));
     }
     if (city) {
       conditions.push(
@@ -307,6 +311,7 @@ function serialize(p: typeof propertiesTable.$inferSelect) {
     price: Number(p.price),
     priceUnit: p.priceUnit,
     area: Number(p.area),
+    country: p.country,
     city: p.city,
     cityAr: p.cityAr,
     address: p.address,

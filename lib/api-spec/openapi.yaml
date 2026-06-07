@@ -45,6 +45,11 @@ paths:
           schema:
             type: string
             enum: [apartment, villa, office, land, commercial, all]
+        - name: country
+          in: query
+          schema:
+            type: string
+            enum: [Saudi Arabia, Egypt]
         - name: city
           in: query
           schema:
@@ -324,6 +329,8 @@ components:
           type: string
         area:
           type: number
+        country:
+          type: string
         city:
           type: string
         cityAr:
@@ -436,6 +443,8 @@ components:
           type: string
         area:
           type: number
+        country:
+          type: string
         city:
           type: string
         cityAr:

@@ -12,6 +12,7 @@ export const propertiesTable = pgTable("properties", {
   category: text("category").notNull(), // apartment | villa | office | land | commercial
   price: numeric("price", { precision: 14, scale: 2 }).notNull(),
   priceUnit: text("price_unit").default("SAR"),
+  country: text("country").notNull().default("Saudi Arabia"),
   area: numeric("area", { precision: 10, scale: 2 }).notNull(),
   city: text("city").notNull(),
   cityAr: text("city_ar").notNull(),

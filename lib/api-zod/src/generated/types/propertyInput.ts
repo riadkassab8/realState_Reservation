@@ -18,6 +18,7 @@ export interface PropertyInput {
   price: number;
   priceUnit?: string;
   area: number;
+  country?: string;
   city: string;
   cityAr: string;
   address: string;
