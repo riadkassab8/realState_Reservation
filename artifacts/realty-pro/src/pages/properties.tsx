@@ -183,9 +183,36 @@ export default function Properties() {
 
       {/* Main Content */}
       <div className="flex-1 space-y-6">
+
+        {/* Country Tab Bar — prominent at top */}
+        <div className="flex gap-3 bg-muted/50 p-1.5 rounded-2xl border border-border">
+          {[
+            { value: "all", label: t("All Countries", "كل الدول"), flag: null },
+            { value: "Saudi Arabia", label: t("Saudi Arabia", "السعودية"), flag: "🇸🇦" },
+            { value: "Egypt", label: t("Egypt", "مصر"), flag: "🇪🇬" },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => handleCountryChange(opt.value)}
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200
+                ${country === opt.value
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/60"
+                }`}
+            >
+              {opt.flag && <span className="text-base">{opt.flag}</span>}
+              {opt.label}
+            </button>
+          ))}
+        </div>
+
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <h1 className="text-2xl md:text-3xl font-bold">
-            {t("Properties", "العقارات")}
+            {country === "all"
+              ? t("All Properties", "كل العقارات")
+              : country === "Saudi Arabia"
+                ? t("Properties in Saudi Arabia", "عقارات السعودية")
+                : t("Properties in Egypt", "عقارات مصر")}
             {!isLoading && (
               <span className="text-muted-foreground text-lg ml-3 rtl:mr-3 font-normal">
                 ({data?.total || 0})
