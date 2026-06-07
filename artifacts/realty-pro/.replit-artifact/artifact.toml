@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Realty Pro"
+version = "1.0.0"
+id = "artifacts/realty-pro"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25569
+
+[services.development]
+run = "pnpm --filter @workspace/realty-pro run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/realty-pro", "run", "build" ]
+publicDir = "artifacts/realty-pro/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25569"
+BASE_PATH = "/"

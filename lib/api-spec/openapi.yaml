@@ -1,22 +1,26 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Realty Pro API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: properties
+    description: Property operations
+  - name: favorites
+    description: Favorites operations
+  - name: stats
+    description: Statistics and aggregations
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +28,245 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /properties:
+    get:
+      operationId: listProperties
+      tags: [properties]
+      summary: List properties with filters
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [sale, rent, all]
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [apartment, villa, office, land, commercial, all]
+        - name: city
+          in: query
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+        - name: minArea
+          in: query
+          schema:
+            type: number
+        - name: maxArea
+          in: query
+          schema:
+            type: number
+        - name: bedrooms
+          in: query
+          schema:
+            type: integer
+        - name: bathrooms
+          in: query
+          schema:
+            type: integer
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [price_asc, price_desc, newest, oldest, area_asc, area_desc]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+      responses:
+        "200":
+          description: List of properties
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PropertyList"
+
+    post:
+      operationId: createProperty
+      tags: [properties]
+      summary: Create a property listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PropertyInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+
+  /properties/{id}:
+    get:
+      operationId: getProperty
+      tags: [properties]
+      summary: Get a single property
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Property found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+        "404":
+          description: Not found
+
+    patch:
+      operationId: updateProperty
+      tags: [properties]
+      summary: Update a property
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PropertyUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Property"
+
+    delete:
+      operationId: deleteProperty
+      tags: [properties]
+      summary: Delete a property
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  /properties/featured:
+    get:
+      operationId: getFeaturedProperties
+      tags: [properties]
+      summary: Get featured properties
+      responses:
+        "200":
+          description: Featured properties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Property"
+
+  /favorites:
+    get:
+      operationId: listFavorites
+      tags: [favorites]
+      summary: List all favorited property IDs
+      responses:
+        "200":
+          description: List of favorite property IDs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: integer
+
+    post:
+      operationId: addFavorite
+      tags: [favorites]
+      summary: Add a property to favorites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FavoriteInput"
+      responses:
+        "201":
+          description: Added
+
+    delete:
+      operationId: removeFavorite
+      tags: [favorites]
+      summary: Remove a property from favorites
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FavoriteInput"
+      responses:
+        "204":
+          description: Removed
+
+  /stats/summary:
+    get:
+      operationId: getStatsSummary
+      tags: [stats]
+      summary: Get dashboard statistics
+      responses:
+        "200":
+          description: Summary stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StatsSummary"
+
+  /stats/cities:
+    get:
+      operationId: getStatsCities
+      tags: [stats]
+      summary: Get property counts by city
+      responses:
+        "200":
+          description: City stats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CityStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +277,276 @@ components:
       required:
         - status
 
+    Property:
+      type: object
+      required:
+        - id
+        - title
+        - titleAr
+        - description
+        - descriptionAr
+        - type
+        - category
+        - price
+        - area
+        - city
+        - cityAr
+        - address
+        - addressAr
+        - lat
+        - lng
+        - bedrooms
+        - bathrooms
+        - images
+        - featured
+        - amenities
+        - createdAt
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        titleAr:
+          type: string
+        description:
+          type: string
+        descriptionAr:
+          type: string
+        type:
+          type: string
+          enum: [sale, rent]
+        category:
+          type: string
+          enum: [apartment, villa, office, land, commercial]
+        price:
+          type: number
+        priceUnit:
+          type: string
+        area:
+          type: number
+        city:
+          type: string
+        cityAr:
+          type: string
+        address:
+          type: string
+        addressAr:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        bedrooms:
+          type: integer
+        bathrooms:
+          type: integer
+        images:
+          type: array
+          items:
+            type: string
+        featured:
+          type: boolean
+        amenities:
+          type: array
+          items:
+            type: string
+        amenitiesAr:
+          type: array
+          items:
+            type: string
+        yearBuilt:
+          type: ["integer", "null"]
+        floor:
+          type: ["integer", "null"]
+        totalFloors:
+          type: ["integer", "null"]
+        parkingSpaces:
+          type: ["integer", "null"]
+        agentName:
+          type: string
+        agentNameAr:
+          type: string
+        agentPhone:
+          type: string
+        agentEmail:
+          type: string
+        createdAt:
+          type: string
+
+    PropertyList:
+      type: object
+      required:
+        - properties
+        - total
+        - page
+        - limit
+        - totalPages
+      properties:
+        properties:
+          type: array
+          items:
+            $ref: "#/components/schemas/Property"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+
+    PropertyInput:
+      type: object
+      required:
+        - title
+        - titleAr
+        - description
+        - descriptionAr
+        - type
+        - category
+        - price
+        - area
+        - city
+        - cityAr
+        - address
+        - addressAr
+        - lat
+        - lng
+        - bedrooms
+        - bathrooms
+        - images
+      properties:
+        title:
+          type: string
+        titleAr:
+          type: string
+        description:
+          type: string
+        descriptionAr:
+          type: string
+        type:
+          type: string
+          enum: [sale, rent]
+        category:
+          type: string
+          enum: [apartment, villa, office, land, commercial]
+        price:
+          type: number
+        priceUnit:
+          type: string
+        area:
+          type: number
+        city:
+          type: string
+        cityAr:
+          type: string
+        address:
+          type: string
+        addressAr:
+          type: string
+        lat:
+          type: number
+        lng:
+          type: number
+        bedrooms:
+          type: integer
+        bathrooms:
+          type: integer
+        images:
+          type: array
+          items:
+            type: string
+        featured:
+          type: boolean
+        amenities:
+          type: array
+          items:
+            type: string
+        amenitiesAr:
+          type: array
+          items:
+            type: string
+        yearBuilt:
+          type: integer
+        floor:
+          type: integer
+        totalFloors:
+          type: integer
+        parkingSpaces:
+          type: integer
+        agentName:
+          type: string
+        agentNameAr:
+          type: string
+        agentPhone:
+          type: string
+        agentEmail:
+          type: string
+
+    PropertyUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+        titleAr:
+          type: string
+        description:
+          type: string
+        descriptionAr:
+          type: string
+        price:
+          type: number
+        featured:
+          type: boolean
+        images:
+          type: array
+          items:
+            type: string
+
+    FavoriteInput:
+      type: object
+      required:
+        - propertyId
+      properties:
+        propertyId:
+          type: integer
+
+    StatsSummary:
+      type: object
+      required:
+        - totalProperties
+        - forSale
+        - forRent
+        - avgPriceSale
+        - avgPriceRent
+        - totalCities
+        - newThisMonth
+      properties:
+        totalProperties:
+          type: integer
+        forSale:
+          type: integer
+        forRent:
+          type: integer
+        avgPriceSale:
+          type: number
+        avgPriceRent:
+          type: number
+        totalCities:
+          type: integer
+        newThisMonth:
+          type: integer
+
+    CityStats:
+      type: object
+      required:
+        - city
+        - cityAr
+        - count
+      properties:
+        city:
+          type: string
+        cityAr:
+          type: string
+        count:
+          type: integer
