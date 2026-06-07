@@ -1,89 +1,321 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Building2, Globe, Shield, Trophy } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
-export default function About() {
+function Chapter({
+  number,
+  titleEn,
+  titleAr,
+  bodyEn,
+  bodyAr,
+  image,
+  reverse = false,
+}: {
+  number: string;
+  titleEn: string;
+  titleAr: string;
+  bodyEn: string;
+  bodyAr: string;
+  image: string;
+  reverse?: boolean;
+}) {
   const { t, language } = useLanguage();
-
-  const values = [
-    {
-      icon: Shield,
-      title: t("Trust & Security", "الثقة والأمان"),
-      desc: t("Every listing is verified to ensure a safe investment.", "يتم التحقق من كل قائمة لضمان استثمار آمن.")
-    },
-    {
-      icon: Trophy,
-      title: t("Premium Quality", "جودة فائقة"),
-      desc: t("We focus exclusively on high-end, luxury real estate.", "نركز حصريًا على العقارات الفاخرة والراقية.")
-    },
-    {
-      icon: Globe,
-      title: t("Global Reach", "انتشار عالمي"),
-      desc: t("Connecting local properties with international buyers.", "ربط العقارات المحلية بالمشترين الدوليين.")
-    },
-  ];
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const isRtl = language === "ar";
+  const effectiveReverse = isRtl ? !reverse : reverse;
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <section className="bg-primary text-primary-foreground py-24 md:py-32">
-        <div className="container px-4 text-center max-w-4xl mx-auto space-y-6">
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-            {t("Elevating Real Estate in the Arab World", "الارتقاء بقطاع العقارات في العالم العربي")}
-          </h1>
-          <p className="text-lg md:text-xl text-primary-foreground/80 leading-relaxed">
-            {t(
-              "Realty Pro was founded with a singular vision: to create a marketplace that matches the prestige of the properties it showcases.",
-              "تأسست Realty Pro برؤية واحدة: إنشاء سوق يطابق هيبة العقارات التي يعرضها."
-            )}
-          </p>
-        </div>
-      </section>
-
-      <section className="py-24 bg-background">
-        <div className="container px-4 max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-            {values.map((v, i) => (
-              <div key={i} className="space-y-4">
-                <div className="w-16 h-16 bg-muted rounded-2xl flex items-center justify-center mx-auto text-primary">
-                  <v.icon className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-bold">{v.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{v.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-muted/30 border-t border-border">
-        <div className="container px-4 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-12">
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0, y: 60 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      className="relative py-24 md:py-32 border-b border-border last:border-0"
+    >
+      <div className="container px-4 max-w-6xl mx-auto">
+        <div
+          className={`flex flex-col ${effectiveReverse ? "md:flex-row-reverse" : "md:flex-row"} gap-12 md:gap-20 items-center`}
+        >
           <div className="flex-1 space-y-6">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              {t("Our Story", "قصتنا")}
-            </h2>
-            <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
-              <p>
-                {t(
-                  "We recognized a gap in the market. While the region boasts some of the world's most spectacular architecture, the platforms used to discover them were cluttered, outdated, and uninspiring.",
-                  "أدركنا وجود فجوة في السوق. فبينما تفتخر المنطقة ببعض أروع المعالم المعمارية في العالم، كانت المنصات المستخدمة لاكتشافها مزدحمة وقديمة وغير ملهمة."
-                )}
-              </p>
-              <p>
-                {t(
-                  "Realty Pro changes that. By combining world-class design, robust verification processes, and an intuitive user experience, we've built a destination where luxury properties find their perfect buyers.",
-                  "ريالتي برو تغير ذلك. من خلال الجمع بين التصميم العالمي المستوى وعمليات التحقق القوية وتجربة المستخدم البديهية، قمنا ببناء وجهة تجد فيها العقارات الفاخرة مشتريها المثاليين."
-                )}
-              </p>
+            <div className="flex items-baseline gap-4">
+              <span className="text-[5rem] md:text-[7rem] leading-none font-black text-primary/10 select-none tabular-nums">
+                {number}
+              </span>
+              <div className="w-12 h-[3px] bg-primary rounded-full flex-shrink-0" />
             </div>
+            <h2 className="text-3xl md:text-5xl font-black leading-tight tracking-tight text-foreground">
+              {t(titleEn, titleAr)}
+            </h2>
+            <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
+              {t(bodyEn, bodyAr)}
+            </p>
           </div>
-          <div className="flex-1 w-full aspect-square md:aspect-auto md:h-[500px] rounded-3xl overflow-hidden bg-card border border-border shadow-xl">
-            <img 
-              src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80" 
-              alt="Architecture" 
-              className="w-full h-full object-cover"
-            />
-          </div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+            className="flex-1 w-full"
+          >
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl ring-1 ring-border">
+              <img
+                src={image}
+                alt={t(titleEn, titleAr)}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </motion.section>
+  );
+}
+
+function Stat({
+  value,
+  labelEn,
+  labelAr,
+  delay,
+}: {
+  value: string;
+  labelEn: string;
+  labelAr: string;
+  delay: number;
+}) {
+  const { t } = useLanguage();
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6, delay, ease: "easeOut" }}
+      className="text-center space-y-2"
+    >
+      <div className="text-5xl md:text-6xl font-black text-primary">{value}</div>
+      <div className="text-sm font-medium text-muted-foreground uppercase tracking-widest">
+        {t(labelEn, labelAr)}
+      </div>
+    </motion.div>
+  );
+}
+
+const chapters = [
+  {
+    number: "01",
+    titleEn: "A Market That Deserved Better",
+    titleAr: "سوق يستحق ما هو أفضل",
+    bodyEn:
+      "The Arab world holds some of the most extraordinary real estate on the planet — palaces on the Palm, penthouses over the Corniche, villas carved into the hillsides of Riyadh. Yet the platforms used to discover them were cluttered, outdated, and felt nothing like the properties they listed. We decided that had to change.",
+    bodyAr:
+      "يضم العالم العربي بعضًا من أروع العقارات على وجه الأرض — قصور في النخلة، وبنتهاوسات فوق الكورنيش، وفيلات محفورة في تلال الرياض. ومع ذلك، كانت المنصات المستخدمة لاكتشافها مزدحمة وقديمة ولا تعكس روح العقارات التي تعرضها. قررنا أن يتغير ذلك.",
+    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&q=80",
+    reverse: false,
+  },
+  {
+    number: "02",
+    titleEn: "Built on Trust, Not Traffic",
+    titleAr: "مبني على الثقة لا على الزيارات",
+    bodyEn:
+      "Most platforms chase volume. We chase integrity. Every listing on Realty Pro passes through a multi-step verification process — documentation checks, agent credentialing, and pricing audits. When you see a property here, you are seeing the truth.",
+    bodyAr:
+      "معظم المنصات تتسابق على الحجم. أما نحن فنتسابق على النزاهة. يمر كل عقار في Realty Pro عبر عملية تحقق متعددة المراحل — فحص الوثائق، واعتماد الوكلاء، ومراجعة الأسعار. حين ترى عقارًا هنا، فأنت ترى الحقيقة.",
+    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=900&q=80",
+    reverse: true,
+  },
+  {
+    number: "03",
+    titleEn: "Design as a First Principle",
+    titleAr: "التصميم كمبدأ أساسي",
+    bodyEn:
+      "Luxury buyers make emotional decisions first and rational ones second. That is why we invested obsessively in design — not as decoration, but as a communication tool. A property presented beautifully sells faster and closer to asking price. We built a platform that earns the trust of what it lists.",
+    bodyAr:
+      "يتخذ مشترو العقارات الفاخرة قراراتهم العاطفية أولاً ثم العقلانية. لهذا استثمرنا بشكل مكثف في التصميم — ليس كزينة، بل كأداة تواصل. العقار المقدَّم بشكل جميل يُباع بشكل أسرع وبسعر أقرب إلى السعر المطلوب. بنينا منصة تستحق ثقة ما تعرضه.",
+    image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&q=80",
+    reverse: false,
+  },
+  {
+    number: "04",
+    titleEn: "From Riyadh to Dubai, One Platform",
+    titleAr: "من الرياض إلى دبي، منصة واحدة",
+    bodyEn:
+      "Real estate in the Gulf is not one market — it is many, each with its own rhythms, regulations, and cultures. Realty Pro was built from day one to work across borders: bilingual interfaces, multi-currency listings, and agents credentialed in each market. One platform, every city that matters.",
+    bodyAr:
+      "العقارات في الخليج ليست سوقًا واحدة — بل هي أسواق متعددة، لكل منها إيقاعها ولوائحها وثقافتها. بُنيت Realty Pro منذ اليوم الأول لتعمل عبر الحدود: واجهات ثنائية اللغة، وقوائم متعددة العملات، ووكلاء معتمدون في كل سوق. منصة واحدة، كل مدينة مهمة.",
+    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=900&q=80",
+    reverse: true,
+  },
+  {
+    number: "05",
+    titleEn: "The Story Is Still Being Written",
+    titleAr: "القصة لا تزال تُكتب",
+    bodyEn:
+      "We launched with a curated portfolio and a clear mission. What comes next is written together — with the agents who list with us, the buyers who trust us, and the cities that grow with us. Realty Pro is not finished. It is just getting started.",
+    bodyAr:
+      "أطلقنا المنصة بمحفظة منتقاة ومهمة واضحة. ما يأتي بعد ذلك يُكتب معًا — مع الوكلاء الذين يدرجون عقاراتهم معنا، والمشترين الذين يثقون بنا، والمدن التي تنمو معنا. Realty Pro لم تنته بعد. إنها بدأت للتو.",
+    image: "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=900&q=80",
+    reverse: false,
+  },
+];
+
+export default function About() {
+  const { t } = useLanguage();
+  const heroRef = useRef(null);
+  const heroInView = useInView(heroRef, { once: true });
+
+  return (
+    <div className="flex flex-col min-h-screen bg-background">
+      {/* Hero — Series Title Card */}
+      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-primary">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=1600&q=80"
+            alt="hero"
+            className="w-full h-full object-cover opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/80 to-primary" />
+        </div>
+
+        <div ref={heroRef} className="relative z-10 container px-4 max-w-4xl mx-auto text-center space-y-8">
+          <motion.p
+            initial={{ opacity: 0, letterSpacing: "0.4em" }}
+            animate={heroInView ? { opacity: 1, letterSpacing: "0.25em" } : {}}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="text-primary-foreground/60 text-xs md:text-sm font-semibold uppercase tracking-[0.25em]"
+          >
+            {t("Our Story — Five Chapters", "قصتنا — خمسة فصول")}
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 40 }}
+            animate={heroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="text-5xl md:text-7xl lg:text-8xl font-black text-primary-foreground leading-none tracking-tight"
+          >
+            {t("Realty Pro", "ريالتي برو")}
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            animate={heroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="text-lg md:text-2xl text-primary-foreground/75 leading-relaxed max-w-2xl mx-auto"
+          >
+            {t(
+              "How a dissatisfaction with mediocrity became the Arab world's finest property platform.",
+              "كيف تحوّل استياء من الرداءة إلى أرقى منصة عقارية في العالم العربي."
+            )}
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={heroInView ? { opacity: 1, scaleX: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.55, ease: "easeOut" }}
+            className="mx-auto w-24 h-[2px] bg-primary-foreground/30 rounded-full origin-center"
+          />
+
+          {/* Chapter index */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={heroInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.7, ease: "easeOut" }}
+            className="flex items-center justify-center gap-3 flex-wrap"
+          >
+            {chapters.map((c) => (
+              <span
+                key={c.number}
+                className="text-xs font-bold text-primary-foreground/40 tracking-widest uppercase"
+              >
+                {c.number}
+                {c.number !== "05" && (
+                  <span className="mx-3 text-primary-foreground/20">·</span>
+                )}
+              </span>
+            ))}
+          </motion.div>
         </div>
       </section>
+
+      {/* Stats interlude */}
+      <section className="py-20 bg-muted/40 border-b border-border">
+        <div className="container px-4 max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-10">
+          <Stat value="15+" labelEn="Cities" labelAr="مدينة" delay={0} />
+          <Stat value="500+" labelEn="Listings" labelAr="عقار" delay={0.1} />
+          <Stat value="12K+" labelEn="Buyers" labelAr="مشتري" delay={0.2} />
+          <Stat value="98%" labelEn="Verified" labelAr="معتمد" delay={0.3} />
+        </div>
+      </section>
+
+      {/* Chapters */}
+      <div className="bg-background">
+        {chapters.map((ch) => (
+          <Chapter key={ch.number} {...ch} />
+        ))}
+      </div>
+
+      {/* Closing CTA */}
+      <ClosingCTA />
     </div>
+  );
+}
+
+function ClosingCTA() {
+  const { t } = useLanguage();
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+
+  return (
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={inView ? { opacity: 1 } : {}}
+      transition={{ duration: 1, ease: "easeOut" }}
+      className="py-32 bg-primary text-primary-foreground text-center"
+    >
+      <div className="container px-4 max-w-3xl mx-auto space-y-8">
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-primary-foreground/60 text-xs font-semibold uppercase tracking-[0.25em]"
+        >
+          {t("Chapter 06 — Yours", "الفصل 06 — فصلك أنت")}
+        </motion.p>
+        <motion.h2
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-4xl md:text-6xl font-black leading-tight"
+        >
+          {t("Find Your Next Chapter", "ابحث عن فصلك القادم")}
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="text-primary-foreground/70 text-lg leading-relaxed"
+        >
+          {t(
+            "Every great property is the beginning of a new story. Yours is waiting.",
+            "كل عقار رائع هو بداية قصة جديدة. قصتك في انتظارك."
+          )}
+        </motion.p>
+        <motion.a
+          href="/properties"
+          initial={{ opacity: 0, y: 12 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.45 }}
+          whileHover={{ scale: 1.04 }}
+          whileTap={{ scale: 0.97 }}
+          className="inline-block px-10 py-4 bg-primary-foreground text-primary rounded-full font-bold text-base tracking-wide shadow-lg cursor-pointer"
+        >
+          {t("Browse Properties", "تصفح العقارات")}
+        </motion.a>
+      </div>
+    </motion.section>
   );
 }
