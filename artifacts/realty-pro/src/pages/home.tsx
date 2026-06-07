@@ -11,6 +11,21 @@ import { setLocation } from "wouter/use-location";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLocation } from "wouter";
 
+const CITY_IMAGES: Record<string, string> = {
+  "Riyadh":     "https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=700&q=80",
+  "Jeddah":     "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=700&q=80",
+  "Dubai":      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700&q=80",
+  "Abu Dhabi":  "https://images.unsplash.com/photo-1529293624168-61236f4c8174?w=700&q=80",
+  "Doha":       "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700&q=80",
+  "Muscat":     "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=700&q=80",
+  "Manama":     "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=700&q=80",
+  "Khobar":     "https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80",
+  "Dhahran":    "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=80",
+  "Kuwait City":"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=700&q=80",
+  "Amman":      "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=700&q=80",
+  "default":    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80",
+};
+
 export default function Home() {
   const { t, language } = useLanguage();
   const [, setLoc] = useLocation();
@@ -200,42 +215,67 @@ export default function Home() {
       {/* City Highlights */}
       <section className="py-24 bg-muted/20">
         <div className="container px-4">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center">
+          <div className="text-center mb-4">
+            <span className="text-xs font-bold text-primary uppercase tracking-[0.25em]">
+              {t("Across the Region", "في أرجاء المنطقة")}
+            </span>
+          </div>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
             {t("Popular Locations", "مواقع شهيرة")}
           </h2>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {isLoadingCities ? (
-              Array(4).fill(0).map((_, i) => (
-                <Skeleton key={i} className="h-48 rounded-2xl" />
-              ))
-            ) : (
-              cities?.map((city, i) => (
-                <motion.div
-                  key={city.city}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="group cursor-pointer relative h-64 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all"
-                  onClick={() => setLoc(`/properties?city=${city.city}`)}
-                >
-                  <img 
-                    src={`https://images.unsplash.com/photo-${1500000000000 + i * 10000}?w=600&q=80`} 
-                    alt={language === "ar" ? city.cityAr : city.city}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute bottom-6 left-6 right-6 text-white">
-                    <h3 className="text-2xl font-bold mb-1">{language === "ar" ? city.cityAr : city.city}</h3>
-                    <p className="text-white/80 text-sm">
-                      {city.count} {t("Properties", "عقارات")}
-                    </p>
-                  </div>
-                </motion.div>
-              ))
+          <p className="text-muted-foreground text-center mb-12 max-w-xl mx-auto">
+            {t(
+              "From Gulf capitals to rising cities — discover properties in the markets that matter.",
+              "من عواصم الخليج إلى المدن الصاعدة — اكتشف عقارات في الأسواق التي تهمك."
             )}
-          </div>
+          </p>
+
+          {isLoadingCities ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {Array(8).fill(0).map((_, i) => (
+                <Skeleton key={i} className="h-56 rounded-2xl" />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {cities?.map((city, i) => {
+                const img = CITY_IMAGES[city.city] ?? CITY_IMAGES["default"];
+                const isLarge = i === 0 || i === 3;
+                return (
+                  <motion.div
+                    key={city.city}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.55, delay: (i % 4) * 0.08 }}
+                    className={`group cursor-pointer relative rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-300 ${isLarge ? "row-span-1 h-72" : "h-56"}`}
+                    onClick={() => setLoc(`/properties?city=${city.city}`)}
+                  >
+                    <img
+                      src={img}
+                      alt={language === "ar" ? city.cityAr : city.city}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                    <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-colors duration-300" />
+                    <div className="absolute bottom-5 left-5 right-5 text-white">
+                      <h3 className="text-xl font-bold leading-tight mb-1">
+                        {language === "ar" ? city.cityAr : city.city}
+                      </h3>
+                      <p className="text-white/70 text-xs font-medium">
+                        {city.count} {t("properties", "عقار")}
+                      </p>
+                    </div>
+                    <div className="absolute top-4 right-4 rtl:right-auto rtl:left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="bg-white/95 text-primary text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                        {t("Explore", "استكشف")}
+                      </span>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
     </div>
