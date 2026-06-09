@@ -1,0 +1,30 @@
+# Dependencies
+node_modules
+package-lock.json
+
+# Build outputs
+dist
+out
+build
+.next
+
+# Cache
+.cache
+.vercel
+.tsbuildinfo
+
+# IDE
+.vscode
+.idea
+.cursor
+
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+
+# Replit
+.replit
+.replitignore
+.local
+.agents
