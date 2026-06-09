@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run build --workspace=@workspace/realty-pro",
+  "buildCommand": "cd artifacts/realty-pro && npm run build",
   "outputDirectory": "artifacts/realty-pro/dist/public",
   "installCommand": "npm install",
   "framework": null,
