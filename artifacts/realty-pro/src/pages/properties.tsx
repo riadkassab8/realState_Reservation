@@ -47,8 +47,8 @@ export default function Properties() {
 
   const activeCities =
     country === "Saudi Arabia" ? SAUDI_CITIES :
-    country === "Egypt" ? EGYPT_CITIES :
-    [...SAUDI_CITIES, ...EGYPT_CITIES];
+      country === "Egypt" ? EGYPT_CITIES :
+        [...SAUDI_CITIES, ...EGYPT_CITIES];
 
   const handleCountryChange = (val: string) => {
     setCountry(val);
@@ -298,7 +298,7 @@ export default function Properties() {
               <Skeleton key={i} className={`rounded-xl ${viewMode === "grid" ? "h-[400px]" : "h-48"}`} />
             ))}
           </div>
-        ) : data?.properties.length === 0 ? (
+        ) : (!Array.isArray(data?.properties) || data.properties.length === 0) ? (
           <div className="text-center py-24 bg-card rounded-2xl border border-border">
             <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="w-8 h-8 text-muted-foreground" />
@@ -322,7 +322,7 @@ export default function Properties() {
             animate="show"
             key={`${country}-${city}-${type}-${category}`}
           >
-            {data?.properties.map((property) => (
+            {Array.isArray(data?.properties) && data.properties.map((property) => (
               <PropertyCard key={property.id} property={property} />
             ))}
           </motion.div>

@@ -103,11 +103,11 @@ function isJsonMediaType(mediaType: string | null): boolean {
 function isTextMediaType(mediaType: string | null): boolean {
   return Boolean(
     mediaType &&
-      (mediaType.startsWith("text/") ||
-        mediaType === "application/xml" ||
-        mediaType === "text/xml" ||
-        mediaType.endsWith("+xml") ||
-        mediaType === "application/x-www-form-urlencoded"),
+    (mediaType.startsWith("text/") ||
+      mediaType === "application/xml" ||
+      mediaType === "text/xml" ||
+      mediaType.endsWith("+xml") ||
+      mediaType === "application/x-www-form-urlencoded"),
   );
 }
 
@@ -218,7 +218,7 @@ export class ResponseParseError extends Error {
   ) {
     super(
       `Failed to parse response from ${requestInfo.method} ${response.url || requestInfo.url} ` +
-        `(${response.status} ${response.statusText}) as JSON`,
+      `(${response.status} ${response.statusText}) as JSON`,
     );
     Object.setPrototypeOf(this, new.target.prototype);
 
@@ -315,7 +315,7 @@ async function parseSuccessBody(
       if (typeof response.blob !== "function") {
         throw new TypeError(
           "Blob responses are not supported in this runtime. " +
-            "Use responseType \"json\" or \"text\" instead.",
+          "Use responseType \"json\" or \"text\" instead.",
         );
       }
       return response.blob();
@@ -359,6 +359,51 @@ export async function customFetch<T = unknown>(
   }
 
   const requestInfo = { method, url: resolveUrl(input) };
+
+  // --- MOCK DATA INTERCEPTOR (no backend needed) ---
+  if (method === "GET") {
+    const { MOCK_PROPERTIES, MOCK_STATS_SUMMARY, MOCK_CITIES } = await import("./mock-data");
+    const urlObj = new URL(requestInfo.url, "http://localhost");
+    const pathname = urlObj.pathname.replace(/\/+$/, "");
+
+    if (pathname.endsWith("/api/properties/featured")) {
+      return MOCK_PROPERTIES.filter(p => p.featured) as any;
+    }
+    if (pathname.endsWith("/api/stats/summary")) {
+      return MOCK_STATS_SUMMARY as any;
+    }
+    if (pathname.endsWith("/api/stats/cities")) {
+      return MOCK_CITIES as any;
+    }
+    if (pathname.endsWith("/api/properties")) {
+      const city = urlObj.searchParams.get("city");
+      const type = urlObj.searchParams.get("type");
+      const category = urlObj.searchParams.get("category");
+      let filtered = [...MOCK_PROPERTIES];
+      if (city && city !== "all") {
+        filtered = filtered.filter(p => p.city.toLowerCase() === city.toLowerCase());
+      }
+      if (type && type !== "all") {
+        filtered = filtered.filter(p => p.type === type);
+      }
+      if (category && category !== "all") {
+        filtered = filtered.filter(p => p.category === category);
+      }
+      return { properties: filtered, total: filtered.length, page: 1, limit: 50, totalPages: 1 } as any;
+    }
+    if (/\/api\/properties\/\d+$/.test(pathname)) {
+      const id = Number(pathname.split("/").pop());
+      const prop = MOCK_PROPERTIES.find(p => p.id === id) ?? MOCK_PROPERTIES[0];
+      return prop as any;
+    }
+    if (pathname.endsWith("/api/favorites")) {
+      return [] as any;
+    }
+    if (pathname.endsWith("/api/health")) {
+      return { status: "ok" } as any;
+    }
+  }
+  // --- END MOCK INTERCEPTOR ---
 
   const response = await fetch(input, { ...init, method, headers });
 
