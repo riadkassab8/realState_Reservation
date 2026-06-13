@@ -13,28 +13,28 @@ import { useLocation } from "wouter";
 
 const CITY_IMAGES: Record<string, string> = {
   // Saudi Arabia
-  "Riyadh":     "https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=700&q=80",
-  "Jeddah":     "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=700&q=80",
-  "Khobar":     "https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80",
-  "Dhahran":    "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=700&q=80",
-  "Dammam":     "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80",
-  "Mecca":      "https://images.unsplash.com/photo-1564507593729-f6e2e32c1e27?w=700&q=80",
-  "Medina":     "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700&q=80",
-  "NEOM":       "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=700&q=80",
+  "Riyadh": "https://images.unsplash.com/photo-1586724237569-f3d0c1dee8c6?w=700&q=80",
+  "Jeddah": "https://images.unsplash.com/photo-1574362848149-11496d93a7c7?w=700&q=80",
+  "Khobar": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80",
+  "Dhahran": "https://images.unsplash.com/photo-1560347876-aeef00ee58a1?w=700&q=80",
+  "Dammam": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80",
+  "Mecca": "https://images.unsplash.com/photo-1564507593729-f6e2e32c1e27?w=700&q=80",
+  "Medina": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=700&q=80",
+  "NEOM": "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=700&q=80",
   // Egypt
-  "Cairo":      "https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=700&q=80",
-  "Giza":       "https://images.unsplash.com/photo-1539768942893-daf53e448371?w=700&q=80",
+  "Cairo": "https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=700&q=80",
+  "Giza": "https://images.unsplash.com/photo-1539768942893-daf53e448371?w=700&q=80",
   "Alexandria": "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=700&q=80",
-  "Hurghada":   "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=700&q=80",
+  "Hurghada": "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=700&q=80",
   // Gulf
-  "Dubai":      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700&q=80",
-  "Abu Dhabi":  "https://images.unsplash.com/photo-1529293624168-61236f4c8174?w=700&q=80",
-  "Doha":       "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=700&q=80",
-  "Muscat":     "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=700&q=80",
-  "Manama":     "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=700&q=80",
-  "Kuwait City":"https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=700&q=80",
-  "Amman":      "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=700&q=80",
-  "default":    "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80",
+  "Dubai": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700&q=80",
+  "Abu Dhabi": "https://images.unsplash.com/photo-1529293624168-61236f4c8174?w=700&q=80",
+  "Doha": "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=700&q=80",
+  "Muscat": "https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?w=700&q=80",
+  "Manama": "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=700&q=80",
+  "Kuwait City": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=700&q=80",
+  "Amman": "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=700&q=80",
+  "default": "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=700&q=80",
 };
 
 export default function Home() {
@@ -60,11 +60,11 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-black/40 z-10" />
-        <div 
+        <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80")' }}
         />
-        
+
         <div className="container relative z-20 px-4 flex flex-col items-center text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -105,9 +105,9 @@ export default function Home() {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div className="hidden md:block w-px bg-border my-2" />
-                
+
                 <div className="flex-1">
                   <Select value={searchCity} onValueChange={setSearchCity}>
                     <SelectTrigger className="h-12 bg-transparent border-none text-foreground text-lg focus:ring-0">
@@ -115,7 +115,7 @@ export default function Home() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">{t("All Cities", "جميع المدن")}</SelectItem>
-                      {!isLoadingCities && cities?.map(c => (
+                      {!isLoadingCities && Array.isArray(cities) && cities.map(c => (
                         <SelectItem key={c.city} value={c.city}>
                           {language === "ar" ? c.cityAr : c.city}
                         </SelectItem>
@@ -123,7 +123,7 @@ export default function Home() {
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <Button type="submit" size="lg" className="h-12 px-8 text-lg rounded-xl shadow-lg">
                   <Search className="w-5 h-5 mr-2 rtl:ml-2 rtl:mr-0" />
                   {t("Search", "ابحث")}
@@ -199,8 +199,8 @@ export default function Home() {
             </div>
             <Button variant="ghost" className="hidden md:flex group" onClick={() => setLoc('/properties')}>
               {t("View All", "عرض الكل")}
-              {language === "en" ? 
-                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" /> : 
+              {language === "en" ?
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" /> :
                 <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
               }
             </Button>
@@ -216,7 +216,7 @@ export default function Home() {
                 </div>
               ))
             ) : (
-              featured?.slice(0, 3).map((property, i) => (
+              Array.isArray(featured) && featured.slice(0, 3).map((property, i) => (
                 <motion.div
                   key={property.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -258,7 +258,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              {cities?.map((city, i) => {
+              {Array.isArray(cities) && cities.map((city, i) => {
                 const img = CITY_IMAGES[city.city] ?? CITY_IMAGES["default"];
                 const isLarge = i === 0 || i === 3;
                 return (
