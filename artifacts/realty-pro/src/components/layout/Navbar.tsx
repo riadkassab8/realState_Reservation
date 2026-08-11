@@ -18,6 +18,7 @@ export function Navbar() {
     { href: "/", label: t("Home", "الرئيسية") },
     { href: "/properties", label: t("Properties", "العقارات") },
     { href: "/about", label: t("About", "عن الشركة") },
+    { href: "/sell-property", label: t("Sell Property", "اعرض عقارك") },
   ];
 
   return (

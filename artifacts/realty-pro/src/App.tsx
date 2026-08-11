@@ -22,6 +22,7 @@ import Properties from "@/pages/properties";
 import PropertyDetail from "@/pages/property-detail";
 import Favorites from "@/pages/favorites";
 import About from "@/pages/about";
+import SellProperty from "@/pages/sell-property";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ function Router() {
         <Route path="/properties" component={Properties} />
         <Route path="/properties/:id" component={PropertyDetail} />
         <Route path="/favorites" component={Favorites} />
+        <Route path="/sell-property" component={SellProperty} />
         <Route path="/about" component={About} />
         <Route component={NotFound} />
       </Switch>

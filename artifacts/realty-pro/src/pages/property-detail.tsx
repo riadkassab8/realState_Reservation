@@ -11,8 +11,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { buildWhatsAppLink } from "@/lib/site-content";
+import PropertyDetailEnhanced from "./property-detail-enhanced";
 
-export default function PropertyDetail() {
+export default PropertyDetailEnhanced;
+
+function PropertyDetail() {
   const { id } = useParams();
   const { t, language } = useLanguage();
   const queryClient = useQueryClient();

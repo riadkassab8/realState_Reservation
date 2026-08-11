@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
-import { Filter, Grid, List as ListIcon, Search, X, MapPin } from "lucide-react";
+import { Filter, Grid, List as ListIcon, Search, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -273,20 +273,6 @@ export default function Properties() {
                 </button>
               </span>
             )}
-          </motion.div>
-        )}
-
-        {/* Active city badge */}
-        {city !== "all" && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-semibold rounded-badge">
-              <MapPin className="w-4 h-4" />
-              {language === "ar" ? activeCities.find((c: any) => c.en === city)?.ar ?? city : city}
-            </div>
           </motion.div>
         )}
 

@@ -1,6 +1,7 @@
 import { Navbar } from "./Navbar";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { WHATSAPP_NUMBER, buildWhatsAppLink } from "@/lib/site-content";
+import { MessageCircle } from "lucide-react";
 
 export function Footer() {
   const { t, language } = useLanguage();
@@ -73,11 +74,26 @@ export function Footer() {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { t } = useLanguage();
+  const message = t(
+    "Hello, I want help finding a suitable property.",
+    "مرحباً، أريد المساعدة في العثور على عقار مناسب."
+  );
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       <main className="flex-grow flex flex-col">{children}</main>
       <Footer />
+      <a
+        href={buildWhatsAppLink(message)}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={t("Chat on WhatsApp", "تواصل على واتساب")}
+        className="fixed bottom-20 end-4 z-50 inline-flex h-14 w-14 items-center justify-center rounded-full bg-green-600 text-white shadow-2xl shadow-green-950/25 transition-transform hover:scale-105 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 md:bottom-6 md:end-6"
+      >
+        <MessageCircle className="h-6 w-6" />
+      </a>
     </div>
   );
 }
