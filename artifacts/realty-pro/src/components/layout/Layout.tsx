@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "./Navbar";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { WHATSAPP_NUMBER, buildWhatsAppLink } from "@/lib/site-content";
+import { Link } from "wouter";
 import {
   MessageCircle,
   MapPin,
@@ -112,8 +113,8 @@ export function Footer() {
                   { label: t("Sell Property", "اعرض عقارك"), href: "/sell-property" },
                 ].map((link) => (
                   <li key={link.href}>
-                    <a
-                      href={link.href}
+                    <Link
+                      to={link.href}
                       className="inline-flex items-center gap-2 hover:text-primary transition-colors"
                     >
                       {language === "ar" ? (
@@ -122,7 +123,7 @@ export function Footer() {
                         <ChevronLeft className="h-3.5 w-3.5 text-primary/70" />
                       )}
                       <span>{link.label}</span>
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -141,15 +142,15 @@ export function Footer() {
                   { icon: <LandIcon className="h-4 w-4" />, label: t("Lands", "أراضي"), href: "/properties?category=land" },
                 ].map((c) => (
                   <li key={c.label}>
-                    <a
-                      href={c.href}
+                    <Link
+                      to={c.href}
                       className="inline-flex items-center gap-2.5 hover:text-primary transition-colors"
                     >
                       <IconBox>
                         <span className="text-primary">{c.icon}</span>
                       </IconBox>
                       <span>{c.label}</span>
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
