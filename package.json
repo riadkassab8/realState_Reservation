@@ -8,9 +8,9 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace=@workspace/realty-pro",
-    "build": "npm run typecheck && npm run build --workspaces --if-present",
+    "build": "npm run typecheck && npm run build --workspace=@workspace/realty-pro",
     "typecheck:libs": "tsc --build",
-    "typecheck": "npm run typecheck:libs && npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck:libs && npm run typecheck --workspace=@workspace/realty-pro"
   },
   "private": true,
   "devDependencies": {
