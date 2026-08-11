@@ -2,13 +2,6 @@
 node_modules
 package-lock.json
 
-# Build outputs
-!artifacts/realty-pro/dist
-dist
-out
-build
-.next
-
 # Cache
 .cache
 .vercel
@@ -29,3 +22,5 @@ Thumbs.db
 .replitignore
 .local
 .agents
+
+# Note: dist is NOT ignored here because it's the build output directory
