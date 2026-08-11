@@ -6,8 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Heart, MapPin, Bed, Bath, Square, MessageCircle } from "lucide-react";
-import { useAddFavorite, useRemoveFavorite, useListFavorites, getListFavoritesQueryKey } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMockListFavorites as useListFavorites } from "@/lib/localData";
 import { motion } from "framer-motion";
 import { buildWhatsAppLink } from "@/lib/site-content";
 
@@ -18,10 +17,7 @@ interface PropertyCardProps {
 
 export function PropertyCard({ property }: PropertyCardProps) {
   const { t, language } = useLanguage();
-  const queryClient = useQueryClient();
-  const { data: favorites = [] } = useListFavorites();
-  const addFavorite = useAddFavorite();
-  const removeFavorite = useRemoveFavorite();
+  const { data: favorites = [], addFavorite, removeFavorite } = useListFavorites();
 
   const isFav = favorites.includes(property.id);
   const isPending = addFavorite.isPending || removeFavorite.isPending;
@@ -37,33 +33,9 @@ export function PropertyCard({ property }: PropertyCardProps) {
     }
     
     if (isFav) {
-      console.log("Removing from favorites");
-      removeFavorite.mutate(
-        { data: { propertyId: property.id } },
-        { 
-          onSuccess: () => {
-            console.log("Successfully removed from favorites");
-            queryClient.invalidateQueries({ queryKey: getListFavoritesQueryKey() });
-          },
-          onError: (error) => {
-            console.error("Error removing from favorites:", error);
-          }
-        }
-      );
+      removeFavorite.mutate({ data: { propertyId: property.id } });
     } else {
-      console.log("Adding to favorites");
-      addFavorite.mutate(
-        { data: { propertyId: property.id } },
-        { 
-          onSuccess: () => {
-            console.log("Successfully added to favorites");
-            queryClient.invalidateQueries({ queryKey: getListFavoritesQueryKey() });
-          },
-          onError: (error) => {
-            console.error("Error adding to favorites:", error);
-          }
-        }
-      );
+      addFavorite.mutate({ data: { propertyId: property.id } });
     }
   };
 

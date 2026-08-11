@@ -1,7 +1,8 @@
 {
-    "buildCommand": "npm run build --workspace=@workspace/realty-pro",
+    "buildCommand": "npm run build",
     "outputDirectory": "artifacts/realty-pro/dist/public",
     "framework": "vite",
+    "installCommand": "npm install",
     "rewrites": [
         {
             "source": "/api/(.*)",
@@ -11,5 +12,10 @@
             "source": "/(.*)",
             "destination": "/index.html"
         }
-    ]
+    ],
+    "functions": {
+        "api/**/*.js": {
+            "runtime": "nodejs20.x"
+        }
+    }
 }

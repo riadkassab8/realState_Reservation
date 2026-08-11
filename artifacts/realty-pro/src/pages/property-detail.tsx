@@ -1,6 +1,6 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { formatPrice as formatPriceFn } from "@/lib/format-price";
-import { useGetProperty, useListFavorites, useAddFavorite, useRemoveFavorite, getListFavoritesQueryKey } from "@workspace/api-client-react";
+import { useMockGetProperty as useGetProperty, useMockListFavorites as useListFavorites } from "@/lib/localData";
 import { useParams } from "wouter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -18,12 +18,8 @@ export default PropertyDetailEnhanced;
 function PropertyDetail() {
   const { id } = useParams();
   const { t, language } = useLanguage();
-  const queryClient = useQueryClient();
-  
   const { data: property, isLoading } = useGetProperty(Number(id));
-  const { data: favorites = [] } = useListFavorites();
-  const addFavorite = useAddFavorite();
-  const removeFavorite = useRemoveFavorite();
+  const { data: favorites = [], addFavorite, removeFavorite } = useListFavorites();
 
   const [activeImage, setActiveImage] = useState(0);
 
@@ -54,15 +50,9 @@ function PropertyDetail() {
 
   const toggleFavorite = () => {
     if (isFav) {
-      removeFavorite.mutate(
-        { data: { propertyId: property.id } },
-        { onSuccess: () => queryClient.invalidateQueries({ queryKey: getListFavoritesQueryKey() }) }
-      );
+      removeFavorite.mutate({ data: { propertyId: property.id } });
     } else {
-      addFavorite.mutate(
-        { data: { propertyId: property.id } },
-        { onSuccess: () => queryClient.invalidateQueries({ queryKey: getListFavoritesQueryKey() }) }
-      );
+      addFavorite.mutate({ data: { propertyId: property.id } });
     }
   };
 

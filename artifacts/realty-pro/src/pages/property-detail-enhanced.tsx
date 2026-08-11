@@ -2,14 +2,10 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { formatPrice as formatPriceFn } from "@/lib/format-price";
 import { buildWhatsAppLink } from "@/lib/site-content";
 import {
-  getListFavoritesQueryKey,
-  useAddFavorite,
-  useGetProperty,
-  useListProperties,
-  useListFavorites,
-  useRemoveFavorite,
-} from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+  useMockGetProperty as useGetProperty,
+  useMockListProperties as useListProperties,
+  useMockListFavorites as useListFavorites,
+} from "@/lib/localData";
 import { motion } from "framer-motion";
 import {
   Banknote,
@@ -75,12 +71,9 @@ const PAYMENT_PLANS = [
 export default function PropertyDetailEnhanced() {
   const { id } = useParams();
   const { t, language } = useLanguage();
-  const queryClient = useQueryClient();
 
   const { data: property, isLoading } = useGetProperty(Number(id));
-  const { data: favorites = [] } = useListFavorites();
-  const addFavorite = useAddFavorite();
-  const removeFavorite = useRemoveFavorite();
+  const { data: favorites = [], addFavorite, removeFavorite } = useListFavorites();
 
   const [activeImage, setActiveImage] = useState(0);
   const [selectedPlanId, setSelectedPlanId] = useState<(typeof PAYMENT_PLANS)[number]["id"]>("balanced");
@@ -196,10 +189,7 @@ export default function PropertyDetailEnhanced() {
     if (isPending) return;
 
     const mutation = isFav ? removeFavorite : addFavorite;
-    mutation.mutate(
-      { data: { propertyId: property.id } },
-      { onSuccess: () => queryClient.invalidateQueries({ queryKey: getListFavoritesQueryKey() }) }
-    );
+    mutation.mutate({ data: { propertyId: property.id } });
   };
 
   const buildViewingMessage = () => {

@@ -1,5 +1,8 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useListProperties, useListFavorites } from "@workspace/api-client-react";
+import {
+  useMockListProperties as useListProperties,
+  useMockListFavorites as useListFavorites,
+} from "@/lib/localData";
 import { PropertyCard } from "@/components/ui/property-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Heart } from "lucide-react";

@@ -1,5 +1,5 @@
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useListProperties } from "@workspace/api-client-react";
+import { useMockListProperties as useListProperties } from "@/lib/localData";
 import { PropertyCard } from "@/components/ui/property-card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
