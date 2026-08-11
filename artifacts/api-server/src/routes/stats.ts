@@ -1,11 +1,11 @@
-import { Router } from "express";
+import { Router, type Request, type Response } from "express";
 import { db, propertiesTable } from "@workspace/db";
 import { eq, sql, gte } from "drizzle-orm";
 
 const router = Router();
 
 // GET /stats/summary
-router.get("/stats/summary", async (req, res) => {
+router.get("/stats/summary", async (req: Request, res: Response) => {
   try {
     const [totals] = await db
       .select({
@@ -43,7 +43,7 @@ router.get("/stats/summary", async (req, res) => {
 });
 
 // GET /stats/cities
-router.get("/stats/cities", async (req, res) => {
+router.get("/stats/cities", async (req: Request, res: Response) => {
   try {
     const cities = await db
       .select({

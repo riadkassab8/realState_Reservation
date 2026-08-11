@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, type Request, type Response } from "express";
 import { db, propertiesTable } from "@workspace/db";
 import { eq, and, gte, lte, ilike, or, desc, asc, sql } from "drizzle-orm";
 import {
@@ -13,7 +13,7 @@ import {
 const router = Router();
 
 // GET /properties
-router.get("/properties", async (req, res) => {
+router.get("/properties", async (req: Request, res: Response) => {
   try {
     const query = ListPropertiesQueryParams.safeParse(req.query);
     if (!query.success) {
@@ -149,7 +149,7 @@ router.get("/properties", async (req, res) => {
 });
 
 // POST /properties
-router.post("/properties", async (req, res) => {
+router.post("/properties", async (req: Request, res: Response) => {
   try {
     const body = CreatePropertyBody.safeParse(req.body);
     if (!body.success) {
@@ -201,7 +201,7 @@ router.post("/properties", async (req, res) => {
 });
 
 // GET /properties/featured — must be before /:id
-router.get("/properties/featured", async (req, res) => {
+router.get("/properties/featured", async (req: Request, res: Response) => {
   try {
     const properties = await db
       .select()
@@ -218,7 +218,7 @@ router.get("/properties/featured", async (req, res) => {
 });
 
 // GET /properties/:id
-router.get("/properties/:id", async (req, res) => {
+router.get("/properties/:id", async (req: Request, res: Response) => {
   try {
     const params = GetPropertyParams.safeParse({ id: Number(req.params.id) });
     if (!params.success) {
@@ -244,7 +244,7 @@ router.get("/properties/:id", async (req, res) => {
 });
 
 // PATCH /properties/:id
-router.patch("/properties/:id", async (req, res) => {
+router.patch("/properties/:id", async (req: Request, res: Response) => {
   try {
     const params = UpdatePropertyParams.safeParse({ id: Number(req.params.id) });
     const body = UpdatePropertyBody.safeParse(req.body);
@@ -283,7 +283,7 @@ router.patch("/properties/:id", async (req, res) => {
 });
 
 // DELETE /properties/:id
-router.delete("/properties/:id", async (req, res) => {
+router.delete("/properties/:id", async (req: Request, res: Response) => {
   try {
     const params = DeletePropertyParams.safeParse({ id: Number(req.params.id) });
     if (!params.success) {

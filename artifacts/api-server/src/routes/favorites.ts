@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, type Request, type Response } from "express";
 import { db, favoritesTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import { AddFavoriteBody, RemoveFavoriteBody } from "@workspace/api-zod";
@@ -6,7 +6,7 @@ import { AddFavoriteBody, RemoveFavoriteBody } from "@workspace/api-zod";
 const router = Router();
 
 // GET /favorites
-router.get("/favorites", async (req, res) => {
+router.get("/favorites", async (req: Request, res: Response) => {
   try {
     const favorites = await db.select().from(favoritesTable);
     res.json(favorites.map((f) => f.propertyId));
@@ -17,7 +17,7 @@ router.get("/favorites", async (req, res) => {
 });
 
 // POST /favorites
-router.post("/favorites", async (req, res) => {
+router.post("/favorites", async (req: Request, res: Response) => {
   try {
     const body = AddFavoriteBody.safeParse(req.body);
     if (!body.success) {
@@ -42,7 +42,7 @@ router.post("/favorites", async (req, res) => {
 });
 
 // DELETE /favorites
-router.delete("/favorites", async (req, res) => {
+router.delete("/favorites", async (req: Request, res: Response) => {
   try {
     const body = RemoveFavoriteBody.safeParse(req.body);
     if (!body.success) {
