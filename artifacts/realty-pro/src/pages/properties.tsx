@@ -21,7 +21,7 @@ export default function Properties() {
 
   const [type, setType] = useState<any>(searchParams.get("type") || "all");
   const [city, setCity] = useState(searchParams.get("city") || "all");
-  const [category, setCategory] = useState<any>("all");
+  const [category, setCategory] = useState<any>(searchParams.get("category") || "all");
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(50000000);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
