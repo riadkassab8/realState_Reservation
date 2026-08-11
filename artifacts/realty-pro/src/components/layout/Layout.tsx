@@ -1,24 +1,39 @@
 import { Navbar } from "./Navbar";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { WHATSAPP_NUMBER, buildWhatsAppLink } from "@/lib/site-content";
 
 export function Footer() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   return (
     <footer className="border-t border-border bg-muted/40 mt-auto">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xl">R</span>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center">
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 28 28"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M14 2L2 12H6V24H11V16H17V24H22V12H26L14 2Z"
+                    fill="currentColor"
+                    className="text-primary"
+                  />
+                </svg>
               </div>
-              <span className="font-bold text-xl tracking-tight">Realty Pro</span>
+              <span className="font-bold text-2xl tracking-tight" style={{ fontFamily: 'Cairo, sans-serif' }}>
+                {language === "ar" ? "ديار" : "Deyar"}
+              </span>
             </div>
             <p className="text-sm text-muted-foreground">
               {t(
-                "Premium real estate marketplace for the discerning buyer.",
-                "منصة العقارات الفاخرة للمشتري المتميز."
+                "Premium real estate marketplace for Egypt.",
+                "منصة العقارات الفاخرة لمصر."
               )}
             </p>
           </div>
@@ -35,14 +50,22 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">{t("Contact", "اتصل بنا")}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>info@realtypro.example.com</li>
-              <li>+971 50 123 4567</li>
-              <li>{t("Dubai, UAE", "دبي، الإمارات")}</li>
+              <li>
+                <a 
+                  href={buildWhatsAppLink("مرحباً، أريد الاستفسار عن عقار")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-green-600 transition-colors"
+                >
+                  <span className="text-green-600 font-semibold">WhatsApp:</span> {WHATSAPP_NUMBER}
+                </a>
+              </li>
+              <li>{t("Egypt", "مصر")}</li>
             </ul>
           </div>
         </div>
         <div className="mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Realty Pro. {t("All rights reserved.", "جميع الحقوق محفوظة.")}</p>
+          <p>© {new Date().getFullYear()} ديار. {t("All rights reserved.", "جميع الحقوق محفوظة.")}</p>
         </div>
       </div>
     </footer>

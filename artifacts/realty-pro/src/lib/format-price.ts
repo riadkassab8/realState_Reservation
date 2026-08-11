@@ -30,5 +30,11 @@ export function formatPrice(
   const formatted = new Intl.NumberFormat(locale, {
     maximumFractionDigits: 0,
   }).format(price);
+  
+  // Use EGP for English, ج.م for Arabic
+  if (code === "EGP") {
+    return language === "ar" ? `${formatted} ج.م` : `${formatted} EGP`;
+  }
+  
   return language === "ar" ? `${formatted} ${symbol}` : `${symbol} ${formatted}`;
 }

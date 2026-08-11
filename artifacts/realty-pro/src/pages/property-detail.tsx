@@ -6,10 +6,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Heart, MapPin, Bed, Bath, Square, Calendar, Car, ArrowLeft, ArrowRight, Phone, Mail, User } from "lucide-react";
+import { Heart, MapPin, Bed, Bath, Square, Calendar, Car, ArrowLeft, ArrowRight, Phone, Mail, User, MessageCircle } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { buildWhatsAppLink } from "@/lib/site-content";
 
 export default function PropertyDetail() {
   const { id } = useParams();
@@ -68,6 +69,16 @@ export default function PropertyDetail() {
 
   const formatPrice = (price: number) =>
     formatPriceFn(price, property.priceUnit, language);
+
+  const buildWhatsAppMessage = () => {
+    const propTitle = language === "ar" ? property.titleAr : property.title;
+    const propPrice = formatPrice(property.price);
+    const propAddress = language === "ar" ? property.addressAr : property.address;
+    
+    return language === "ar"
+      ? `مرحباً، أريد الاستفسار عن العقار:\n\nالعنوان: ${propTitle}\nالسعر: ${propPrice}\nالموقع: ${propAddress}\nالمساحة: ${property.area} متر مربع\n\nالرابط: ${window.location.href}`
+      : `Hello, I'm interested in this property:\n\nTitle: ${propTitle}\nPrice: ${propPrice}\nLocation: ${propAddress}\nArea: ${property.area} sqm\n\nLink: ${window.location.href}`;
+  };
 
   return (
     <div className="container px-4 py-8 mx-auto">
@@ -216,14 +227,15 @@ export default function PropertyDetail() {
                 </div>
 
                 <div className="space-y-4">
-                  <Button className="w-full h-12 text-base flex gap-2" size="lg">
-                    <Phone className="w-5 h-5" /> 
-                    {property.agentPhone || "+1 234 567 890"}
-                  </Button>
-                  <Button variant="outline" className="w-full h-12 text-base flex gap-2" size="lg">
-                    <Mail className="w-5 h-5" /> 
-                    {t("Send Email", "إرسال بريد إلكتروني")}
-                  </Button>
+                  <a 
+                    href={buildWhatsAppLink(buildWhatsAppMessage())}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full h-12 text-base flex gap-2 items-center justify-center bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  >
+                    <MessageCircle className="w-5 h-5" /> 
+                    {t("Contact via WhatsApp", "تواصل عبر واتساب")}
+                  </a>
                 </div>
               </CardContent>
             </Card>

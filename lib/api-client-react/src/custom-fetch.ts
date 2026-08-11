@@ -360,50 +360,112 @@ export async function customFetch<T = unknown>(
 
   const requestInfo = { method, url: resolveUrl(input) };
 
-  // --- MOCK DATA INTERCEPTOR (no backend needed) ---
-  if (method === "GET") {
-    const { MOCK_PROPERTIES, MOCK_STATS_SUMMARY, MOCK_CITIES } = await import("./mock-data");
-    const urlObj = new URL(requestInfo.url, "http://localhost");
-    const pathname = urlObj.pathname.replace(/\/+$/, "");
+// --- MOCK DATA INTERCEPTOR (no backend needed) ---
+// Local storage for favorites
+let mockFavorites: number[] = [];
 
-    if (pathname.endsWith("/api/properties/featured")) {
-      return MOCK_PROPERTIES.filter(p => p.featured) as any;
-    }
-    if (pathname.endsWith("/api/stats/summary")) {
-      return MOCK_STATS_SUMMARY as any;
-    }
-    if (pathname.endsWith("/api/stats/cities")) {
-      return MOCK_CITIES as any;
-    }
-    if (pathname.endsWith("/api/properties")) {
-      const city = urlObj.searchParams.get("city");
-      const type = urlObj.searchParams.get("type");
-      const category = urlObj.searchParams.get("category");
-      let filtered = [...MOCK_PROPERTIES];
-      if (city && city !== "all") {
-        filtered = filtered.filter(p => p.city.toLowerCase() === city.toLowerCase());
-      }
-      if (type && type !== "all") {
-        filtered = filtered.filter(p => p.type === type);
-      }
-      if (category && category !== "all") {
-        filtered = filtered.filter(p => p.category === category);
-      }
-      return { properties: filtered, total: filtered.length, page: 1, limit: 50, totalPages: 1 } as any;
-    }
-    if (/\/api\/properties\/\d+$/.test(pathname)) {
-      const id = Number(pathname.split("/").pop());
-      const prop = MOCK_PROPERTIES.find(p => p.id === id) ?? MOCK_PROPERTIES[0];
-      return prop as any;
-    }
-    if (pathname.endsWith("/api/favorites")) {
-      return [] as any;
-    }
-    if (pathname.endsWith("/api/health")) {
-      return { status: "ok" } as any;
-    }
+if (typeof window !== 'undefined') {
+  const stored = localStorage.getItem('mockFavorites');
+  if (stored) {
+    mockFavorites = JSON.parse(stored);
   }
-  // --- END MOCK INTERCEPTOR ---
+}
+
+const saveFavorites = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.setItem('mockFavorites', JSON.stringify(mockFavorites));
+  }
+};
+
+if (method === "GET") {
+  const { MOCK_PROPERTIES, MOCK_STATS_SUMMARY, MOCK_CITIES } = await import("./mock-data");
+  const urlObj = new URL(requestInfo.url, "http://localhost");
+  const pathname = urlObj.pathname.replace(/\/+$/, "");
+
+  if (pathname.endsWith("/api/properties/featured")) {
+    return MOCK_PROPERTIES.filter(p => p.featured) as any;
+  }
+  if (pathname.endsWith("/api/stats/summary")) {
+    return MOCK_STATS_SUMMARY as any;
+  }
+  if (pathname.endsWith("/api/stats/cities")) {
+    return MOCK_CITIES as any;
+  }
+  if (pathname.endsWith("/api/properties")) {
+    const city = urlObj.searchParams.get("city");
+    const type = urlObj.searchParams.get("type");
+    const category = urlObj.searchParams.get("category");
+    const minPrice = urlObj.searchParams.get("minPrice");
+    const maxPrice = urlObj.searchParams.get("maxPrice");
+    let filtered = [...MOCK_PROPERTIES];
+    if (city && city !== "all") {
+      filtered = filtered.filter(p => p.city.toLowerCase() === city.toLowerCase());
+    }
+    if (type && type !== "all") {
+      filtered = filtered.filter(p => p.type === type);
+    }
+    if (category && category !== "all") {
+      filtered = filtered.filter(p => p.category === category);
+    }
+    if (minPrice) {
+      filtered = filtered.filter(p => p.price >= Number(minPrice));
+    }
+    if (maxPrice) {
+      filtered = filtered.filter(p => p.price <= Number(maxPrice));
+    }
+    return { properties: filtered, total: filtered.length, page: 1, limit: 50, totalPages: 1 } as any;
+  }
+  if (/\/api\/properties\/\d+$/.test(pathname)) {
+    const id = Number(pathname.split("/").pop());
+    const prop = MOCK_PROPERTIES.find(p => p.id === id) ?? MOCK_PROPERTIES[0];
+    return prop as any;
+  }
+  if (pathname.endsWith("/api/favorites")) {
+    return mockFavorites as any;
+  }
+  if (pathname.endsWith("/api/health")) {
+    return { status: "ok" } as any;
+  }
+}
+
+if (method === "POST" && requestInfo.url.includes("/api/favorites")) {
+  try {
+    const body = JSON.parse(init.body as string);
+    console.log("POST /api/favorites body:", body);
+    const propertyId = body.data?.propertyId || body.propertyId;
+    console.log("Extracted propertyId:", propertyId);
+    if (propertyId && !mockFavorites.includes(propertyId)) {
+      mockFavorites.push(propertyId);
+      saveFavorites();
+      console.log("Updated favorites:", mockFavorites);
+    }
+    return null as any;
+  } catch (e) {
+    console.error("Error parsing POST body:", e);
+    console.error("Body was:", init.body);
+    return null as any;
+  }
+}
+
+if (method === "DELETE" && requestInfo.url.includes("/api/favorites")) {
+  try {
+    const body = JSON.parse(init.body as string);
+    console.log("DELETE /api/favorites body:", body);
+    const propertyId = body.data?.propertyId || body.propertyId;
+    console.log("Extracted propertyId:", propertyId);
+    if (propertyId) {
+      mockFavorites = mockFavorites.filter(id => id !== propertyId);
+      saveFavorites();
+      console.log("Updated favorites:", mockFavorites);
+    }
+    return null as any;
+  } catch (e) {
+    console.error("Error parsing DELETE body:", e);
+    console.error("Body was:", init.body);
+    return null as any;
+  }
+}
+// --- END MOCK INTERCEPTOR ---
 
   const response = await fetch(input, { ...init, method, headers });
 

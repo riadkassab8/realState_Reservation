@@ -3,108 +3,91 @@ import { useListProperties } from "@workspace/api-client-react";
 import { PropertyCard } from "@/components/ui/property-card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
-import { Filter, Grid, List as ListIcon, Search } from "lucide-react";
+import { Filter, Grid, List as ListIcon, Search, X, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { EGYPT_GOVERNORATES } from "@/lib/site-content";
 
-const SAUDI_CITIES = [
-  { en: "Riyadh", ar: "الرياض" },
-  { en: "Jeddah", ar: "جدة" },
-  { en: "Mecca", ar: "مكة المكرمة" },
-  { en: "Medina", ar: "المدينة المنورة" },
-  { en: "Khobar", ar: "الخبر" },
-  { en: "Dammam", ar: "الدمام" },
-  { en: "Dhahran", ar: "الظهران" },
-  { en: "NEOM", ar: "نيوم" },
-  { en: "Abha", ar: "أبها" },
-  { en: "Tabuk", ar: "تبوك" },
-  { en: "Yanbu", ar: "ينبع" },
-];
-
-const EGYPT_CITIES = [
-  { en: "Cairo", ar: "القاهرة" },
-  { en: "Giza", ar: "الجيزة" },
-  { en: "Alexandria", ar: "الإسكندرية" },
-  { en: "Hurghada", ar: "الغردقة" },
-  { en: "Sharm El Sheikh", ar: "شرم الشيخ" },
-];
+const EGYPT_CITIES = EGYPT_GOVERNORATES;
 
 export default function Properties() {
   const { t, language } = useLanguage();
   const [location] = useLocation();
   const searchParams = new URLSearchParams(window.location.search);
 
-  const [country, setCountry] = useState<string>(searchParams.get("country") || "all");
   const [type, setType] = useState<any>(searchParams.get("type") || "all");
   const [city, setCity] = useState(searchParams.get("city") || "all");
   const [category, setCategory] = useState<any>("all");
-  const [priceRange, setPriceRange] = useState([0, 50000000]);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(50000000);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [debouncedMinPrice, setDebouncedMinPrice] = useState(0);
+  const [debouncedMaxPrice, setDebouncedMaxPrice] = useState(50000000);
 
-  const activeCities =
-    country === "Saudi Arabia" ? SAUDI_CITIES :
-      country === "Egypt" ? EGYPT_CITIES :
-        [...SAUDI_CITIES, ...EGYPT_CITIES];
+  const activeCities = EGYPT_CITIES;
 
-  const handleCountryChange = (val: string) => {
-    setCountry(val);
-    setCity("all");
-  };
+  // Debounce price updates to avoid lag
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedMinPrice(minPrice);
+      setDebouncedMaxPrice(maxPrice);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [minPrice, maxPrice]);
 
   const { data, isLoading } = useListProperties({
     type: type !== "all" ? type : undefined,
-    country: country !== "all" ? (country as any) : undefined,
     city: city !== "all" ? city : undefined,
     category: category !== "all" ? category : undefined,
-    minPrice: priceRange[0],
-    maxPrice: priceRange[1],
+    minPrice: debouncedMinPrice,
+    maxPrice: debouncedMaxPrice,
     limit: 50,
   });
 
   const clearFilters = () => {
-    setCountry("all");
     setType("all");
     setCity("all");
     setCategory("all");
-    setPriceRange([0, 50000000]);
+    setMinPrice(0);
+    setMaxPrice(50000000);
+    setDebouncedMinPrice(0);
+    setDebouncedMaxPrice(50000000);
   };
 
-  const CountryTabs = () => (
-    <div className="flex gap-2 mb-6">
-      {[
-        { value: "all", label: t("All", "الكل") },
-        { value: "Saudi Arabia", label: t("Saudi Arabia", "السعودية"), flag: "🇸🇦" },
-        { value: "Egypt", label: t("Egypt", "مصر"), flag: "🇪🇬" },
-      ].map((opt) => (
-        <button
-          key={opt.value}
-          onClick={() => handleCountryChange(opt.value)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-semibold border transition-all
-            ${country === opt.value
-              ? "bg-primary text-primary-foreground border-primary shadow"
-              : "bg-background text-muted-foreground border-border hover:border-primary/50 hover:text-foreground"
-            }`}
-        >
-          {opt.flag && <span>{opt.flag}</span>}
-          {opt.label}
-        </button>
-      ))}
-    </div>
-  );
+  const hasActiveFilters = type !== "all" || city !== "all" || category !== "all" || 
+    minPrice !== 0 || maxPrice !== 50000000;
+
+  const formatPrice = (value: number) => {
+    if (value >= 1000000) {
+      return `${(value / 1000000).toFixed(1)}M`;
+    }
+    if (value >= 1000) {
+      return `${(value / 1000).toFixed(0)}K`;
+    }
+    return value.toLocaleString();
+  };
+
+  const pricePresets = [
+    { label: "All", min: 0, max: 50000000 },
+    { label: "Under 1M", min: 0, max: 1000000 },
+    { label: "1M - 5M", min: 1000000, max: 5000000 },
+    { label: "5M - 10M", min: 5000000, max: 10000000 },
+    { label: "10M - 20M", min: 10000000, max: 20000000 },
+  ];
 
   const FilterContent = () => (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="space-y-3">
         <label className="text-sm font-semibold">{t("Property Type", "نوع العقار")}</label>
         <Select value={type} onValueChange={setType}>
-          <SelectTrigger>
+          <SelectTrigger className="h-12 text-base rounded-input">
             <SelectValue placeholder={t("Select Type", "اختر النوع")} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-card">
             <SelectItem value="all">{t("All", "الكل")}</SelectItem>
             <SelectItem value="sale">{t("For Sale", "للبيع")}</SelectItem>
             <SelectItem value="rent">{t("For Rent", "للإيجار")}</SelectItem>
@@ -115,10 +98,10 @@ export default function Properties() {
       <div className="space-y-3">
         <label className="text-sm font-semibold">{t("Category", "الفئة")}</label>
         <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger>
+          <SelectTrigger className="h-12 text-base rounded-input">
             <SelectValue placeholder={t("Select Category", "اختر الفئة")} />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="rounded-card">
             <SelectItem value="all">{t("All", "الكل")}</SelectItem>
             <SelectItem value="apartment">{t("Apartment", "شقة")}</SelectItem>
             <SelectItem value="villa">{t("Villa", "فيلا")}</SelectItem>
@@ -131,10 +114,10 @@ export default function Properties() {
       <div className="space-y-3">
         <label className="text-sm font-semibold">{t("City", "المدينة")}</label>
         <Select value={city} onValueChange={setCity}>
-          <SelectTrigger>
+          <SelectTrigger className="h-12 text-base rounded-input">
             <SelectValue placeholder={t("Select City", "اختر المدينة")} />
           </SelectTrigger>
-          <SelectContent className="max-h-52 overflow-y-auto">
+          <SelectContent className="max-h-52 overflow-y-auto rounded-card">
             <SelectItem value="all">{t("All Cities", "كل المدن")}</SelectItem>
             {activeCities.map((c) => (
               <SelectItem key={c.en} value={c.en}>
@@ -147,187 +130,243 @@ export default function Properties() {
 
       <div className="space-y-4">
         <label className="text-sm font-semibold">{t("Price Range", "نطاق السعر")}</label>
-        <Slider
-          min={0}
-          max={50000000}
-          step={250000}
-          value={priceRange}
-          onValueChange={setPriceRange}
-          className="mt-6"
-        />
-        <div className="flex justify-between text-xs text-muted-foreground mt-2">
-          <span>{priceRange[0].toLocaleString()}</span>
-          <span>{priceRange[1].toLocaleString()}</span>
+        
+        {/* Quick Price Presets */}
+        <div className="flex flex-wrap gap-2">
+          {pricePresets.map((preset) => (
+            <button
+              key={preset.label}
+              onClick={() => { setMinPrice(preset.min); setMaxPrice(preset.max); }}
+              className={`px-4 py-2 text-sm font-semibold rounded-full border transition-all
+                ${minPrice === preset.min && maxPrice === preset.max
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-background text-muted-foreground border-border hover:border-primary/50"
+                }`}
+            >
+              {preset.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Number Inputs */}
+        <div className="flex gap-3 pt-4">
+          <div className="flex-1">
+            <label className="text-sm text-muted-foreground mb-1 block font-medium">{t("Min", "الأدنى")}</label>
+            <Input
+              type="number"
+              value={minPrice}
+              onChange={(e) => setMinPrice(Number(e.target.value))}
+              placeholder="0"
+              min={0}
+              max={50000000}
+              className="h-12 text-base"
+              step="100000"
+            />
+          </div>
+          <div className="flex-1">
+            <label className="text-sm text-muted-foreground mb-1 block font-medium">{t("Max", "الأقصى")}</label>
+            <Input
+              type="number"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(Number(e.target.value))}
+              placeholder="50M"
+              min={0}
+              max={50000000}
+              className="h-12 text-base"
+              step="1000000"
+            />
+          </div>
         </div>
       </div>
 
-      <Button variant="outline" className="w-full" onClick={clearFilters}>
-        {t("Clear Filters", "مسح الفلاتر")}
-      </Button>
+      <div className="flex gap-2 pt-2">
+        <Button variant="outline" className="flex-1 h-12 text-base font-semibold" onClick={clearFilters}>
+          <X className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
+          {t("Clear", "مسح")}
+        </Button>
+      </div>
     </div>
   );
 
   return (
-    <div className="container px-4 py-8 mx-auto flex flex-col md:flex-row gap-8">
+    <div className="container px-4 py-12 md:py-16 lg:py-20 mx-auto flex flex-col md:flex-row gap-8 md:gap-12">
       {/* Desktop Filters */}
       <aside className="hidden md:block w-72 shrink-0">
-        <div className="sticky top-24 bg-card p-6 rounded-2xl border border-border shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold">{t("Filters", "تصفية")}</h2>
-            <Filter className="w-5 h-5 text-muted-foreground" />
+        <div className="sticky top-24 space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">{t("Filters", "الفلتر")}</h2>
+            {hasActiveFilters && (
+              <Button variant="ghost" size="sm" onClick={clearFilters} className="text-sm font-semibold">
+                <X className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
+                {t("Clear", "مسح")}
+              </Button>
+            )}
           </div>
-          <CountryTabs />
           <FilterContent />
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 space-y-6">
-
-        {/* Country Tab Bar — prominent at top */}
-        <div className="flex gap-3 bg-muted/50 p-1.5 rounded-2xl border border-border">
-          {[
-            { value: "all", label: t("All Countries", "كل الدول"), flag: null },
-            { value: "Saudi Arabia", label: t("Saudi Arabia", "السعودية"), flag: "🇸🇦" },
-            { value: "Egypt", label: t("Egypt", "مصر"), flag: "🇪🇬" },
-          ].map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => handleCountryChange(opt.value)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200
-                ${country === opt.value
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/60"
-                }`}
-            >
-              {opt.flag && <span className="text-base">{opt.flag}</span>}
-              {opt.label}
-            </button>
-          ))}
+      <main className="flex-1">
+        {/* Mobile Filter Toggle */}
+        <div className="md:hidden mb-6">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="w-full h-12 text-base font-semibold rounded-input gap-2">
+                <Filter className="w-5 h-5" />
+                {t("Filters", "الفلتر")}
+                {hasActiveFilters && (
+                  <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-0.5 rounded-badge">
+                    {[type !== "all", category !== "all", city !== "all", minPrice !== 0 || maxPrice !== 50000000].filter(Boolean).length}
+                  </span>
+                )}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl">
+              <SheetHeader className="mb-6">
+                <SheetTitle className="text-2xl font-bold">{t("Filters", "الفلتر")}</SheetTitle>
+              </SheetHeader>
+              <FilterContent />
+            </SheetContent>
+          </Sheet>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <h1 className="text-2xl md:text-3xl font-bold">
-            {country === "all"
-              ? t("All Properties", "كل العقارات")
-              : country === "Saudi Arabia"
-                ? t("Properties in Saudi Arabia", "عقارات السعودية")
-                : t("Properties in Egypt", "عقارات مصر")}
-            {!isLoading && (
-              <span className="text-muted-foreground text-lg ml-3 rtl:mr-3 font-normal">
-                ({data?.total || 0})
-              </span>
-            )}
-          </h1>
-
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            {/* Mobile Filters */}
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="outline" className="md:hidden flex-1">
-                  <Filter className="w-4 h-4 mr-2 rtl:ml-2 rtl:mr-0" />
-                  {t("Filters", "تصفية")}
-                </Button>
-              </SheetTrigger>
-              <SheetContent side={language === "ar" ? "right" : "left"}>
-                <SheetHeader>
-                  <SheetTitle>{t("Filters", "تصفية")}</SheetTitle>
-                </SheetHeader>
-                <div className="py-4">
-                  <CountryTabs />
-                  <FilterContent />
-                </div>
-              </SheetContent>
-            </Sheet>
-
-            {/* View Toggles */}
-            <div className="flex bg-muted rounded-lg p-1">
-              <Button
-                variant={viewMode === "grid" ? "default" : "ghost"}
-                size="icon"
-                className="w-8 h-8 rounded-md"
-                onClick={() => setViewMode("grid")}
-              >
-                <Grid className="w-4 h-4" />
-              </Button>
-              <Button
-                variant={viewMode === "list" ? "default" : "ghost"}
-                size="icon"
-                className="w-8 h-8 rounded-md"
-                onClick={() => setViewMode("list")}
-              >
-                <ListIcon className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Active country badge */}
-        {country !== "all" && (
+        {/* Active Filters */}
+        {hasActiveFilters && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-2"
+            className="flex flex-wrap gap-2 mb-8"
           >
-            <span className="text-sm text-muted-foreground">
-              {t("Showing", "عرض")}:
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-semibold border border-primary/20">
-              {country === "Saudi Arabia" ? "🇸🇦" : "🇪🇬"}
-              {language === "ar"
-                ? country === "Saudi Arabia" ? "المملكة العربية السعودية" : "مصر"
-                : country}
-            </span>
+            {type !== "all" && (
+              <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold border border-primary/20 rounded-badge">
+                {type === "sale" ? t("For Sale", "للبيع") : t("For Rent", "للإيجار")}
+                <button onClick={() => setType("all")} className="hover:text-primary/70">
+                  <X className="w-4 h-4" />
+                </button>
+              </span>
+            )}
+            {category !== "all" && (
+              <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold border border-primary/20 rounded-badge">
+                {category === "apartment" ? t("Apartment", "شقة") :
+                 category === "villa" ? t("Villa", "فيلا") :
+                 category === "commercial" ? t("Commercial", "تجاري") :
+                 category === "land" ? t("Land", "أرض") : category}
+                <button onClick={() => setCategory("all")} className="hover:text-primary/70">
+                  <X className="w-4 h-4" />
+                </button>
+              </span>
+            )}
             {city !== "all" && (
-              <>
-                <span className="text-muted-foreground">·</span>
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-muted rounded-full text-sm font-medium">
-                  {language === "ar"
-                    ? activeCities.find((c) => c.en === city)?.ar ?? city
-                    : city}
-                </span>
-              </>
+              <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold border border-primary/20 rounded-badge">
+                {language === "ar" ? activeCities.find((c: any) => c.en === city)?.ar ?? city : city}
+                <button onClick={() => setCity("all")} className="hover:text-primary/70">
+                  <X className="w-4 h-4" />
+                </button>
+              </span>
+            )}
+            {(minPrice !== 0 || maxPrice !== 50000000) && (
+              <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-semibold border border-primary/20 rounded-badge">
+                {formatPrice(minPrice)} - {formatPrice(maxPrice)} EGP
+                <button onClick={() => { setMinPrice(0); setMaxPrice(50000000); setDebouncedMinPrice(0); setDebouncedMaxPrice(50000000); }} className="hover:text-primary/70">
+                  <X className="w-4 h-4" />
+                </button>
+              </span>
             )}
           </motion.div>
         )}
 
-        {/* Results */}
+        {/* Active city badge */}
+        {city !== "all" && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-full text-sm font-semibold rounded-badge">
+              <MapPin className="w-4 h-4" />
+              {language === "ar" ? activeCities.find((c: any) => c.en === city)?.ar ?? city : city}
+            </div>
+          </motion.div>
+        )}
+
+        {/* View Toggle & Results Count */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="text-muted-foreground text-sm">
+            {isLoading ? (
+              <Skeleton className="w-24 h-5" />
+            ) : (
+              t(
+                `${data?.total || 0} properties found`,
+                `${data?.total || 0} عقار تم العثور عليه`
+              )
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant={viewMode === "grid" ? "default" : "outline"}
+              size="icon"
+              onClick={() => setViewMode("grid")}
+              className="rounded-button"
+            >
+              <Grid className="w-5 h-5" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "outline"}
+              size="icon"
+              onClick={() => setViewMode("list")}
+              className="rounded-button"
+            >
+              <ListIcon className="w-5 h-5" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Properties Grid */}
         {isLoading ? (
-          <div className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"}`}>
+          <div className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
             {Array(6).fill(0).map((_, i) => (
-              <Skeleton key={i} className={`rounded-xl ${viewMode === "grid" ? "h-[400px]" : "h-48"}`} />
+              <div key={i} className="space-y-4">
+                <Skeleton className="w-full aspect-[4/3] rounded-card" />
+                <Skeleton className="w-3/4 h-8" />
+                <Skeleton className="w-1/2 h-5" />
+              </div>
             ))}
           </div>
-        ) : (!Array.isArray(data?.properties) || data.properties.length === 0) ? (
-          <div className="text-center py-24 bg-card rounded-2xl border border-border">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="w-8 h-8 text-muted-foreground" />
+        ) : (
+          <div className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
+            {Array.isArray(data?.properties) && data.properties.map((property, i) => (
+              <motion.div
+                key={property.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: i * 0.05 }}
+              >
+                <PropertyCard property={property} />
+              </motion.div>
+            ))}
+          </div>
+        )}
+
+        {/* No Results */}
+        {!isLoading && (!data?.properties || data.properties.length === 0) && (
+          <div className="text-center py-20">
+            <div className="w-20 h-20 mx-auto mb-6 bg-muted rounded-full flex items-center justify-center">
+              <Search className="w-10 h-10 text-muted-foreground" />
             </div>
-            <h3 className="text-xl font-bold mb-2">{t("No properties found", "لم يتم العثور على عقارات")}</h3>
-            <p className="text-muted-foreground">
-              {t("Try adjusting your filters to find what you're looking for.", "حاول تعديل الفلاتر للعثور على ما تبحث عنه.")}
+            <h3 className="text-2xl font-bold mb-2">{t("No Properties Found", "لم يتم العثور على عقارات")}</h3>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              {t(
+                "Try adjusting your filters to find what you're looking for.",
+                "حاول تعديل الفلاتر للعثور على ما تبحث عنه."
+              )}
             </p>
-            <Button variant="outline" className="mt-6" onClick={clearFilters}>
+            <Button variant="outline" onClick={clearFilters} className="mt-6 h-12 text-base font-semibold rounded-button">
               {t("Clear Filters", "مسح الفلاتر")}
             </Button>
           </div>
-        ) : (
-          <motion.div
-            className={`grid gap-6 ${viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"}`}
-            variants={{
-              hidden: { opacity: 0 },
-              show: { opacity: 1, transition: { staggerChildren: 0.07 } },
-            }}
-            initial="hidden"
-            animate="show"
-            key={`${country}-${city}-${type}-${category}`}
-          >
-            {Array.isArray(data?.properties) && data.properties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </motion.div>
         )}
-      </div>
+      </main>
     </div>
   );
 }
