@@ -291,7 +291,7 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.55, delay: (i % 3) * 0.1 }}
-                  className={`group cursor-pointer relative rounded-card overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-300 ${isFeatured ? "row-span-1 h-72" : "h-64"}`}
+                  className={`group cursor-pointer relative rounded-card overflow-hidden shadow-sm hover:shadow-2xl transition-shadow duration-300 my-2 sm:my-0 ${isFeatured ? "row-span-1 h-72" : "h-64"}`}
                   onClick={() => setLocation(`/properties?city=${city.en}`)}
                 >
                   <img

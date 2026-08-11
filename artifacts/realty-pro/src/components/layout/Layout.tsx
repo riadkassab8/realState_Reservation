@@ -57,7 +57,7 @@ export function Footer() {
       <div className="container mx-auto px-4 pt-10 md:pt-12">
         {/* Main footer card */}
         <div className="rounded-2xl border border-border bg-card/80 backdrop-blur-sm shadow-sm">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 p-6 md:p-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 p-4 sm:p-6 md:p-10">
             {/* Brand */}
             <div className="space-y-4 text-center sm:text-start">
               <div className="flex items-center justify-center gap-2.5 sm:justify-start">
@@ -197,7 +197,7 @@ export function Footer() {
           </div>
 
           {/* Bottom bar */}
-          <div className="border-t border-border px-6 md:px-10 py-4 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
+          <div className="border-t border-border px-4 sm:px-6 md:px-10 py-3 sm:py-4 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
             <BackToTop />
             <div className="flex items-center gap-3 w-full md:w-auto">
               <span className="hidden md:block h-px flex-1 bg-border" />
