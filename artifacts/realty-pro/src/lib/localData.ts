@@ -3,6 +3,7 @@ import {
   MOCK_PROPERTIES,
   MOCK_STATS_SUMMARY,
 } from "./mock-data";
+import { getAllProperties } from "./admin/propertyManager";
 import type { Property, PropertyList, StatsSummary, FavoriteInput } from "./mock-data";
 
 const FAV_KEY = "realty-favorites";
@@ -103,7 +104,8 @@ export function useMockListProperties(
   _opts?: { query?: { enabled?: boolean } }
 ) {
   const data = useMemo<PropertyList>(() => {
-    let list = MOCK_PROPERTIES.filter((p) => {
+    const allProperties = getAllProperties();
+    let list = allProperties.filter((p) => {
       if (params?.type && params.type !== "all" && p.type !== params.type) return false;
       if (params?.city && params.city !== "all" && p.city !== params.city) return false;
       if (params?.category && params.category !== "all" && p.category !== params.category) return false;
@@ -135,7 +137,8 @@ export function useMockListProperties(
 
 export function useMockGetProperty(id: number) {
   const data = useMemo<Property | undefined>(() => {
-    return MOCK_PROPERTIES.find((p) => p.id === id);
+    const allProperties = getAllProperties();
+    return allProperties.find((p) => p.id === id);
   }, [id]);
 
   return { data, isLoading: false };
@@ -143,7 +146,7 @@ export function useMockGetProperty(id: number) {
 
 export function useMockGetFeaturedProperties() {
   const data = useMemo<Property[]>(
-    () => MOCK_PROPERTIES.filter((p) => p.featured),
+    () => getAllProperties().filter((p) => p.featured),
     [],
   );
   return { data, isLoading: false };
@@ -156,15 +159,17 @@ export function useMockGetStatsSummary() {
 
 export function useMockGetStatsCities() {
   const data = useMemo(
-    () =>
-      Array.from(new Set(MOCK_PROPERTIES.map((p) => p.city))).map((city) => {
-        const prop = MOCK_PROPERTIES.find((p) => p.city === city)!;
+    () => {
+      const allProperties = getAllProperties();
+      return Array.from(new Set(allProperties.map((p) => p.city))).map((city) => {
+        const prop = allProperties.find((p) => p.city === city)!;
         return {
           city: prop.city,
           cityAr: prop.cityAr,
-          count: MOCK_PROPERTIES.filter((p) => p.city === city).length,
+          count: allProperties.filter((p) => p.city === city).length,
         };
-      }),
+      });
+    },
     [],
   );
   return { data, isLoading: false };
