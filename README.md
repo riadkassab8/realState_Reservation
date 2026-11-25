@@ -44,6 +44,35 @@ This is a monorepo using npm workspaces with the following structure:
   - `api-zod` - Zod schemas
   - `db` - Database utilities
 
+
+## Authentication (API server)
+
+The API server now has real server-side authentication:
+
+- `POST /api/auth/register` — creates an account (always the `USER` role; the role is never taken from the request)
+- `POST /api/auth/login` — verifies email + password and returns a signed JWT (valid 7 days)
+- `GET /api/auth/me` — returns the user the token belongs to
+- `POST /api/auth/logout` — stateless; the client deletes its token
+
+Passwords are stored as bcrypt hashes (cost 12); the plain password is never
+saved or returned. Authenticated requests send `Authorization: Bearer <token>`.
+Browsing properties stays public; creating/editing properties requires a
+`MERCHANT` or `ADMIN` token, and deleting requires `ADMIN`.
+
+Setup:
+
+1. Copy `artifacts/api-server/.env.example` to `.env` and set `DATABASE_URL`
+   and `JWT_SECRET` (generate one with `openssl rand -hex 32`).
+2. Create the `users` table: `npm run push --workspace=@workspace/db`
+   (drizzle-kit push).
+3. Create the first admin account:
+   ```bash
+   ADMIN_EMAIL=you@example.com ADMIN_PASSWORD='a-strong-password'      npm run seed:admin --workspace=@workspace/api-server
+   ```
+
+The React app still uses its mock login; point it at these endpoints once the
+API server and database are deployed.
+
 ## Deployment
 
 ### Vercel

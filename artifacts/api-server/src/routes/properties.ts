@@ -1,5 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { db, propertiesTable } from "@workspace/db";
+import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { eq, and, gte, lte, ilike, or, desc, asc, sql } from "drizzle-orm";
 import {
   ListPropertiesQueryParams,
@@ -149,7 +150,8 @@ router.get("/properties", async (req: Request, res: Response) => {
 });
 
 // POST /properties
-router.post("/properties", async (req: Request, res: Response) => {
+// Write routes require a logged-in MERCHANT or ADMIN (browsing stays public).
+router.post("/properties", requireAuth, requireRole("MERCHANT"), async (req: Request, res: Response) => {
   try {
     const body = CreatePropertyBody.safeParse(req.body);
     if (!body.success) {
@@ -244,7 +246,7 @@ router.get("/properties/:id", async (req: Request, res: Response) => {
 });
 
 // PATCH /properties/:id
-router.patch("/properties/:id", async (req: Request, res: Response) => {
+router.patch("/properties/:id", requireAuth, requireRole("MERCHANT"), async (req: Request, res: Response) => {
   try {
     const params = UpdatePropertyParams.safeParse({ id: Number(req.params.id) });
     const body = UpdatePropertyBody.safeParse(req.body);
@@ -283,7 +285,8 @@ router.patch("/properties/:id", async (req: Request, res: Response) => {
 });
 
 // DELETE /properties/:id
-router.delete("/properties/:id", async (req: Request, res: Response) => {
+// Deleting is ADMIN-only.
+router.delete("/properties/:id", requireAuth, requireRole(), async (req: Request, res: Response) => {
   try {
     const params = DeletePropertyParams.safeParse({ id: Number(req.params.id) });
     if (!params.success) {
